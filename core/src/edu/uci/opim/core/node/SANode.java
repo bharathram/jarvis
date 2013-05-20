@@ -1,5 +1,6 @@
 package edu.uci.opim.core.node;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -13,14 +14,22 @@ import java.util.Map;
 public abstract class SANode {
 	private long id;
 	private String name;
-	private List<NodeClass> classes;
+	private List<NodeClass> classes = new ArrayList<NodeClass>();
 	private NodeLocation location;
 	private String confPath;
-
+	private List<NodeState> states = new ArrayList<NodeState>();
 	/**
 	 * Map to lookup human readable messages for sensor states.
 	 */
 	private Map<NodeState, String> message;
+
+	public void setLocation(NodeLocation location) {
+		this.location = location;
+	}
+
+	public NodeLocation getLocation() {
+		return location;
+	}
 
 	public void setId(long id) {
 		this.id = id;
@@ -46,6 +55,17 @@ public abstract class SANode {
 
 	public void addClass(NodeClass newClass) {
 		classes.add(newClass);
+
+	}
+
+	public NodeState[] getStates() {
+		NodeState[] ret = new NodeState[states.size()];
+		states.toArray(ret);
+		return ret;
+	}
+
+	public void addState(NodeState newState) {
+		states.add(newState);
 
 	}
 
