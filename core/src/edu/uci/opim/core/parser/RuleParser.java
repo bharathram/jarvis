@@ -25,15 +25,10 @@ public class RuleParser {
 
 	public List<Rule> parse() {
 		List<Rule> nodes = new ArrayList<Rule>();
-		return nodes;
-	}
-
-	public static void main(String argv[]) {
 
 		try {
 
-			File fXmlFile = new File(
-					"C:\\Users\\Nisha\\Dropbox\\MiddlewareProject\\schema\\rule-conf.xml");
+			File fXmlFile = new File(fileName);
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory
 					.newInstance();
 			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
@@ -50,50 +45,135 @@ public class RuleParser {
 			NodeList nList = doc.getElementsByTagName("blacklist");
 			NodeList nList1 = doc.getElementsByTagName("rule");
 			NodeList nList2 = doc.getElementsByTagName("condition");
+			NodeList nList3 = doc.getElementsByTagName("state");
+			NodeList nList4 = doc.getElementsByTagName("action");
+			NodeList nList5 = doc.getElementsByTagName("do");
 
 			System.out.println("----------------------------");
 
-			for (int temp = 0; temp < nList.getLength(); temp++) {
+			for (int i = 0; i < nList.getLength(); i++) {
+				System.out.println("nList:" + nList.getLength());
 
-				Node nNode = nList.item(temp);
+				Node nNode = nList.item(i);
 
 				System.out.println("\nCurrent Element :" + nNode.getNodeName());
 
 				if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+					for (int j = 0; j < nList1.getLength(); j++) {
+						System.out.println("nList1:" + nList1.getLength());
+						Node nNode1 = nList1.item(j);
+						if (nNode1.getNodeType() == Node.ELEMENT_NODE) {
+							Element eElement1 = (Element) nNode1;
 
-					Element eElement = (Element) nNode;
+							System.out.println("Priority : "
+									+ eElement1.getAttribute("priority"));
+							System.out.println("Name : "
+									+ eElement1.getElementsByTagName("name")
+											.item(0).getTextContent());
+							for (int k = 0; k < nList2.getLength(); k++) {
+								System.out.println("nList2:"
+										+ nList2.getLength());
+								Node nNode2 = nList2.item(k);
+								if (nNode2.getNodeType() == Node.ELEMENT_NODE) {
+									System.out.println("\nCurrent Element2 :"
+											+ nNode2.getNodeName());
+									for (int l = 0; l < nList3.getLength(); l++) {
 
-					System.out.println("Sensor id : "
-							+ eElement.getAttribute("priority"));
-					System.out.println("Name : "
-							+ eElement.getElementsByTagName("name").item(0)
-									.getTextContent());
-					System.out.println("Class Name : "
-							+ eElement.getElementsByTagName("class").item(0)
-									.getTextContent());
-					System.out.println("Location : "
-							+ eElement.getElementsByTagName("location").item(0)
-									.getTextContent());
-					NodeList nList3 = doc.getElementsByTagName("state");
-					for (int temp1 = 0; temp1 < nList.getLength(); temp1++) {
-						Node nNode1 = nList.item(temp1);
-						if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-							System.out.println("Staff id : "
-									+ eElement.getAttribute("id"));
+										Node nNode3 = nList3.item(l);
+										if (nNode3.getNodeType() == Node.ELEMENT_NODE) {
+											Element eElement3 = (Element) nNode3;
+											System.out
+													.println("\nCurrent Element3 :"
+															+ nNode3.getNodeName());
+											System.out
+													.println("host : "
+															+ eElement3
+																	.getAttribute("host"));
+											System.out
+													.println("oper : "
+															+ eElement3
+																	.getAttribute("oper"));
+											System.out
+													.println("class : "
+															+ eElement3
+																	.getAttribute("class"));
+											System.out
+													.println("oper : "
+															+ eElement3
+																	.getAttribute("oper"));
+											System.out
+													.println("class : "
+															+ eElement3
+																	.getAttribute("class"));
+											System.out
+													.println("location : "
+															+ eElement3
+																	.getAttribute("location"));
+											System.out.println("Name : "
+													+ eElement3
+															.getTextContent());
+										}
+									}
 
+								}
+
+							}
+							// System.out.println("action : "
+							// + eElement1.getElementsByTagName("action")
+							// .item(0).getTextContent());
+							for (int m = 0; m < nList1.getLength(); m++) {
+								Node nNode4 = nList4.item(m);
+								if (nNode4.getNodeType() == Node.ELEMENT_NODE) {
+									Element eElement4 = (Element) nNode4;
+									for (int n = 0; n < nList5.getLength(); n++) {
+
+										Node nNode5 = nList5.item(n);
+										if (nNode5.getNodeType() == Node.ELEMENT_NODE) {
+											Element eElement5 = (Element) nNode5;
+											System.out
+													.println("\nCurrent Element3 :"
+															+ nNode5.getNodeName());
+											System.out
+													.println("host : "
+															+ eElement5
+																	.getAttribute("host"));
+											System.out
+													.println("class : "
+															+ eElement5
+																	.getAttribute("class"));
+											System.out
+													.println("host : "
+															+ eElement5
+																	.getAttribute("host"));
+											System.out
+													.println("host : "
+															+ eElement5
+																	.getAttribute("host"));
+											System.out
+													.println("location : "
+															+ eElement5
+																	.getAttribute("location"));
+											System.out.println("Name : "
+													+ eElement5
+															.getTextContent());
+										}
+									}
+								}
+							}
 						}
-
 					}
-
-					System.out.println("ws-path : "
-							+ eElement.getAttribute("ws-path"));
-
 				}
-
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		return null;
 	}
 
+	public static void main(String argv[]) {
+		RuleParser par = new RuleParser(
+				"C:\\Users\\Nisha\\Dropbox\\MiddlewareProject\\schema\\rule-conf1.xml");
+		par.parse();
+
+	}
 }
