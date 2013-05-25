@@ -12,12 +12,13 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import edu.uci.opim.core.node.Actuator;
-import edu.uci.opim.core.node.NodeClass;
-import edu.uci.opim.core.node.NodeLocation;
-import edu.uci.opim.core.node.NodeState;
-import edu.uci.opim.core.node.SANode;
-import edu.uci.opim.core.node.Sensor;
+import edu.uci.opim.core.exception.XMLParseException;
+import edu.uci.opim.node.Actuator;
+import edu.uci.opim.node.NodeClass;
+import edu.uci.opim.node.NodeLocation;
+import edu.uci.opim.node.NodeState;
+import edu.uci.opim.node.SANode;
+import edu.uci.opim.node.Sensor;
 
 public class SensorParser {
 	String fileName;
@@ -138,7 +139,12 @@ public class SensorParser {
 
 	public static void main(String argv[]) {
 		SensorParser par = new SensorParser("sensor-conf.xml");
-		par.parse();
+		try {
+			par.parse();
+		} catch (XMLParseException e) {
+
+			e.printStackTrace();
+		}
 
 	}
 }
