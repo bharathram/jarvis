@@ -9,7 +9,7 @@ import edu.uci.opim.node.Sensor;
 public class CoreWebInterfaceImpl implements CoreWebInterface {
 
 	@Override
-	public String registerGateway(InetAddress ip) {
+	public String registerGateway(InetAddress ip, String key) {
 		// TODO Auto-generated method stub
 		return null;
 	}

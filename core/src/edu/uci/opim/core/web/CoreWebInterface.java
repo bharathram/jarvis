@@ -12,10 +12,12 @@ public interface CoreWebInterface {
 	 * 
 	 * @param ip
 	 *            Address of the gateway
+	 * @param key
+	 *            Security key like ssh may be
 	 * @return An identifier used for addressing this gate way for the rest of
 	 *         the session.
 	 */
-	public String registerGateway(InetAddress ip);
+	public String registerGateway(InetAddress ip, String key);
 
 	/**
 	 * @param gatewayId
