@@ -12,14 +12,19 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import edu.uci.opim.core.action.Action;
+import edu.uci.opim.core.rule.Condition;
+import edu.uci.opim.core.rule.Predicate;
+import edu.uci.opim.core.rule.Predicate.Operands;
 import edu.uci.opim.core.rule.Rule;
+import edu.uci.opim.core.rule.SensorStatePredicate;
+import edu.uci.opim.core.rule.TimePredicate;
 
 public class RuleParser {
 
 	String fileName;
 
 	public RuleParser(String filePath) {
-		// TODO Auto-generated constructor stub
 		this.fileName = filePath;
 	}
 
@@ -42,137 +47,205 @@ public class RuleParser {
 			System.out.println("Root element :"
 					+ doc.getDocumentElement().getNodeName());
 
-			NodeList nList = doc.getElementsByTagName("blacklist");
-			NodeList nList1 = doc.getElementsByTagName("rule");
+			Node blackListNode = doc.getElementsByTagName("blacklist").item(0);
+
+			NodeList ruleNodeList = ((Element) blackListNode)
+					.getElementsByTagName("rule");
 			NodeList nList2 = doc.getElementsByTagName("condition");
 			NodeList nList3 = doc.getElementsByTagName("state");
 			NodeList nList4 = doc.getElementsByTagName("action");
 			NodeList nList5 = doc.getElementsByTagName("do");
 
-			System.out.println("----------------------------");
+			for (int i = 0; i < ruleNodeList.getLength(); i++) {
+				System.out.println("----------------------------");
+				System.out.println("nList:" + ruleNodeList.getLength());
 
-			for (int i = 0; i < nList.getLength(); i++) {
-				System.out.println("nList:" + nList.getLength());
+				Node ruleNode = ruleNodeList.item(i);
 
-				Node nNode = nList.item(i);
+				Rule rule = createRule(ruleNode);
+				nodes.add(rule);
+				System.out.println("\nCurrent Element :"
+						+ ruleNode.getNodeName());
 
-				System.out.println("\nCurrent Element :" + nNode.getNodeName());
-
-				if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-					for (int j = 0; j < nList1.getLength(); j++) {
-						System.out.println("nList1:" + nList1.getLength());
-						Node nNode1 = nList1.item(j);
-						if (nNode1.getNodeType() == Node.ELEMENT_NODE) {
-							Element eElement1 = (Element) nNode1;
-
-							System.out.println("Priority : "
-									+ eElement1.getAttribute("priority"));
-							System.out.println("Name : "
-									+ eElement1.getElementsByTagName("name")
-											.item(0).getTextContent());
-							for (int k = 0; k < nList2.getLength(); k++) {
-								System.out.println("nList2:"
-										+ nList2.getLength());
-								Node nNode2 = nList2.item(k);
-								if (nNode2.getNodeType() == Node.ELEMENT_NODE) {
-									System.out.println("\nCurrent Element2 :"
-											+ nNode2.getNodeName());
-									for (int l = 0; l < nList3.getLength(); l++) {
-
-										Node nNode3 = nList3.item(l);
-										if (nNode3.getNodeType() == Node.ELEMENT_NODE) {
-											Element eElement3 = (Element) nNode3;
-											System.out
-													.println("\nCurrent Element3 :"
-															+ nNode3.getNodeName());
-											System.out
-													.println("host : "
-															+ eElement3
-																	.getAttribute("host"));
-											System.out
-													.println("oper : "
-															+ eElement3
-																	.getAttribute("oper"));
-											System.out
-													.println("class : "
-															+ eElement3
-																	.getAttribute("class"));
-											System.out
-													.println("oper : "
-															+ eElement3
-																	.getAttribute("oper"));
-											System.out
-													.println("class : "
-															+ eElement3
-																	.getAttribute("class"));
-											System.out
-													.println("location : "
-															+ eElement3
-																	.getAttribute("location"));
-											System.out.println("Name : "
-													+ eElement3
-															.getTextContent());
-										}
-									}
-
-								}
-
-							}
-							// System.out.println("action : "
-							// + eElement1.getElementsByTagName("action")
-							// .item(0).getTextContent());
-							for (int m = 0; m < nList1.getLength(); m++) {
-								Node nNode4 = nList4.item(m);
-								if (nNode4.getNodeType() == Node.ELEMENT_NODE) {
-									Element eElement4 = (Element) nNode4;
-									for (int n = 0; n < nList5.getLength(); n++) {
-
-										Node nNode5 = nList5.item(n);
-										if (nNode5.getNodeType() == Node.ELEMENT_NODE) {
-											Element eElement5 = (Element) nNode5;
-											System.out
-													.println("\nCurrent Element3 :"
-															+ nNode5.getNodeName());
-											System.out
-													.println("host : "
-															+ eElement5
-																	.getAttribute("host"));
-											System.out
-													.println("class : "
-															+ eElement5
-																	.getAttribute("class"));
-											System.out
-													.println("host : "
-															+ eElement5
-																	.getAttribute("host"));
-											System.out
-													.println("host : "
-															+ eElement5
-																	.getAttribute("host"));
-											System.out
-													.println("location : "
-															+ eElement5
-																	.getAttribute("location"));
-											System.out.println("Name : "
-													+ eElement5
-															.getTextContent());
-										}
-									}
-								}
-							}
-						}
-					}
-				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		return nodes;
+	}
+
+	private Rule createRule(Node ruleNode) {
+		Rule rule = null;
+		if (ruleNode.getNodeType() == Node.ELEMENT_NODE) {
+			rule = new Rule();
+			Element ruleElement = (Element) ruleNode;
+			String priority = ruleElement.getAttribute("priority");
+			rule.setPriority(Integer.parseInt(priority));
+			System.out.println("Priorty: " + priority);
+
+			String name = ruleElement.getElementsByTagName("name").item(0)
+					.getTextContent();
+			rule.setName(name);
+			System.out.println("Name: " + name);
+
+			Node conditionElement = ruleElement.getElementsByTagName(
+					"condition").item(0);
+			Condition condition = createCondition(conditionElement);
+			rule.setCondition(condition);
+			Node actionElement = ruleElement.getElementsByTagName("action")
+					.item(0);
+
+			Action action = createAction(actionElement);
+			rule.setAction(action);
+		}
+		return rule;
+
+		// for (int j = 0; j < nList1.getLength(); j++) {
+		// System.out.println("nList1:" + nList1.getLength());
+		// Node nNode1 = nList1.item(j);
+		// if (nNode1.getNodeType() == Node.ELEMENT_NODE) {
+		// Element eElement1 = (Element) nNode1;
+		//
+		// System.out.println("Priority : "
+		// + eElement1.getAttribute("priority"));
+		// System.out.println("Name : "
+		// + eElement1.getElementsByTagName("name").item(0)
+		// .getTextContent());
+		// for (int k = 0; k < nList2.getLength(); k++) {
+		// System.out.println("nList2:" + nList2.getLength());
+		// Node nNode2 = nList2.item(k);
+		// if (nNode2.getNodeType() == Node.ELEMENT_NODE) {
+		// System.out.println("\nCurrent Element2 :"
+		// + nNode2.getNodeName());
+		// for (int l = 0; l < nList3.getLength(); l++) {
+		//
+		// Node nNode3 = nList3.item(l);
+		// if (nNode3.getNodeType() == Node.ELEMENT_NODE) {
+		// Element eElement3 = (Element) nNode3;
+		// System.out.println("\nCurrent Element3 :"
+		// + nNode3.getNodeName());
+		// System.out.println("host : "
+		// + eElement3.getAttribute("host"));
+		// System.out.println("oper : "
+		// + eElement3.getAttribute("oper"));
+		// System.out.println("class : "
+		// + eElement3.getAttribute("class"));
+		// System.out.println("oper : "
+		// + eElement3.getAttribute("oper"));
+		// System.out.println("class : "
+		// + eElement3.getAttribute("class"));
+		// System.out.println("location : "
+		// + eElement3
+		// .getAttribute("location"));
+		// System.out.println("Name : "
+		// + eElement3.getTextContent());
+		// }
+		// }
+		//
+		// }
+		//
+		// }
+		// // System.out.println("action : "
+		// // + eElement1.getElementsByTagName("action")
+		// // .item(0).getTextContent());
+		// for (int m = 0; m < nList1.getLength(); m++) {
+		// Node nNode4 = nList4.item(m);
+		// if (nNode4.getNodeType() == Node.ELEMENT_NODE) {
+		// Element eElement4 = (Element) nNode4;
+		// for (int n = 0; n < nList5.getLength(); n++) {
+		//
+		// Node nNode5 = nList5.item(n);
+		// if (nNode5.getNodeType() == Node.ELEMENT_NODE) {
+		// Element eElement5 = (Element) nNode5;
+		// System.out.println("\nCurrent Element3 :"
+		// + nNode5.getNodeName());
+		// System.out.println("host : "
+		// + eElement5.getAttribute("host"));
+		// System.out.println("class : "
+		// + eElement5.getAttribute("class"));
+		// System.out.println("host : "
+		// + eElement5.getAttribute("host"));
+		// System.out.println("host : "
+		// + eElement5.getAttribute("host"));
+		// System.out.println("location : "
+		// + eElement5
+		// .getAttribute("location"));
+		// System.out.println("Name : "
+		// + eElement5.getTextContent());
+		// }
+		// }
+		// }
+		// }
+		// }
+		// }
+		// }
+	}
+
+	private Action createAction(Node actionElement) {
+		// TODO Auto-generated method stub
 		return null;
 	}
 
+	private Condition createCondition(Node conditionNode) {
+		Condition condition = null;
+		if (conditionNode.getNodeType() == Node.ELEMENT_NODE) {
+			condition = new Condition();
+			Node next = conditionNode.getFirstChild();
+			Predicate.Operands oper = null;
+			while (next != null) {
+				if (next.getNodeType() != Node.TEXT_NODE) {
+					System.out.println("RuleParser.createRule()");
+					String nodeName = next.getNodeName();
+					System.out.println(nodeName);
+					if (isConditionalOperator(nodeName)) {
+						oper = Predicate.getOperand(nodeName);
+					} else {
+						Predicate pred = createPredicate(next, oper);
+						oper = null;
+						condition.addPredicate(pred);
+					}
+				}
+				next = next.getNextSibling();
+			}
+		}
+		return condition;
+	}
+
+	private Predicate createPredicate(Node next, Operands oper) {
+		Predicate predicate = null;
+		if (next.getNodeType() == Node.ELEMENT_NODE) {
+			Element element = ((Element) next);
+			if ("state".equals(next.getNodeName())) {
+				SensorStatePredicate sensorStatePredicate = new SensorStatePredicate();
+				sensorStatePredicate.setHost(element.getAttribute("host"));
+				sensorStatePredicate.setSensorClass(element
+						.getAttribute("class"));
+				sensorStatePredicate.setLocation(element
+						.getAttribute("location"));
+				predicate = sensorStatePredicate;
+			} else if ("time".equals(next.getNodeName())) {
+				TimePredicate timepredicate = new TimePredicate();
+				timepredicate.setStart(element.getAttribute("gt"));
+				timepredicate.setEnd(element.getAttribute("lte"));
+				predicate = timepredicate;
+			}
+			if (oper != null && predicate != null) {
+				predicate.setChainedCondition(oper);
+			}
+		}
+		return predicate;
+
+	}
+
+	private boolean isConditionalOperator(String nodeName) {
+		if (Predicate.getOperand(nodeName) == null) {
+			return false;
+		} else
+			return true;
+	}
+
 	public static void main(String argv[]) {
-		RuleParser par = new RuleParser(
-				"C:\\Users\\Nisha\\Dropbox\\MiddlewareProject\\schema\\rule-conf1.xml");
+		RuleParser par = new RuleParser("rule-conf1.xml");
 		par.parse();
 
 	}

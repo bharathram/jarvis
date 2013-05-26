@@ -5,6 +5,14 @@ public abstract class Predicate {
 		AND, OR;
 	};
 
+	public static Predicate.Operands getOperand(String oper) {
+		if ("and".equals(oper))
+			return Operands.AND;
+		if ("or".equals(oper))
+			return Operands.OR;
+		return null;
+	}
+
 	private Operands chainedCondition;
 
 	public abstract boolean evaluate();

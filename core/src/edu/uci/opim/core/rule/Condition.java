@@ -1,10 +1,16 @@
 package edu.uci.opim.core.rule;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 public class Condition {
 	List<Predicate> predicates;
+
+	public Condition() {
+		// TODO Auto-generated constructor stub
+		predicates = new ArrayList<Predicate>();
+	}
 
 	public boolean evaluate() {
 		boolean cond = false;
