@@ -1,5 +1,7 @@
 package edu.uci.opim.core.rule;
 
+import edu.uci.opim.core.ClassManager;
+import edu.uci.opim.core.NodeManager;
 import edu.uci.opim.node.NodeClass;
 import edu.uci.opim.node.NodeLocation;
 
@@ -18,7 +20,10 @@ public class SensorStatePredicate extends Predicate {
 	}
 
 	public void setHost(String host) {
-		this.host = host;
+		if (!"".equals(host)) {
+			this.host = host;
+			NodeManager.getInstance().createSensor(host);
+		}
 	}
 
 	public void setLocation(String location) {
@@ -34,7 +39,10 @@ public class SensorStatePredicate extends Predicate {
 	}
 
 	public void setSensorClass(String sensorClass) {
-		this.sensorClass = new NodeClass(sensorClass);
+		if (!"".equals(sensorClass)) {
+			this.sensorClass = new NodeClass(sensorClass);
+			ClassManager.getInstance().createClass(sensorClass);
+		}
 	}
 
 	@Override

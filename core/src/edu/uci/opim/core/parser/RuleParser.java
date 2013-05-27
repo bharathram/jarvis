@@ -29,7 +29,7 @@ public class RuleParser {
 		this.fileName = filePath;
 	}
 
-	public List<Rule> parse() {
+	public List<Rule> parseBlackList() {
 		List<Rule> nodes = new ArrayList<Rule>();
 
 		try {
@@ -61,6 +61,7 @@ public class RuleParser {
 
 				Rule rule = createRule(ruleNode);
 				nodes.add(rule);
+
 				System.out.println("\nCurrent Element :"
 						+ ruleNode.getNodeName());
 
@@ -89,6 +90,7 @@ public class RuleParser {
 					"condition").item(0);
 			Condition condition = createCondition(conditionElement);
 			rule.setCondition(condition);
+
 			Node actionElement = ruleElement.getElementsByTagName("action")
 					.item(0);
 
@@ -265,7 +267,7 @@ public class RuleParser {
 
 	public static void main(String argv[]) {
 		RuleParser par = new RuleParser("rule-conf1.xml");
-		par.parse();
+		par.parseBlackList();
 
 	}
 }

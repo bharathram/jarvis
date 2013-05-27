@@ -1,15 +1,10 @@
 package edu.uci.opim.node;
 
-public class NodeClass {
-	public final String name;
+import edu.uci.opim.util.StringWrapper;
+
+public class NodeClass extends StringWrapper {
 
 	public NodeClass(String className) {
-		this.name = className;
-	}
-
-	@Override
-	public String toString() {
-
-		return name;
+		super(className);
 	}
 }

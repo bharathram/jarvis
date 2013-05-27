@@ -12,7 +12,7 @@ import java.util.Map;
  * 
  */
 public abstract class SANode {
-	private long id;
+	private String id;
 	private String name;
 	private List<NodeClass> classes = new ArrayList<NodeClass>();
 	private NodeLocation location;
@@ -22,6 +22,7 @@ public abstract class SANode {
 	 * Map to lookup human readable messages for sensor states.
 	 */
 	private Map<NodeState, String> message;
+	private boolean isAlive = false;
 
 	public void setLocation(NodeLocation location) {
 		this.location = location;
@@ -31,11 +32,11 @@ public abstract class SANode {
 		return location;
 	}
 
-	public void setId(long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
-	public long getId() {
+	public String getId() {
 		return id;
 	}
 
@@ -77,4 +78,25 @@ public abstract class SANode {
 		return confPath;
 	}
 
+	public boolean isAlive() {
+		return isAlive;
+
+	}
+
+	public void setAlive(boolean isAlive) {
+		this.isAlive = isAlive;
+	}
+
+	@Override
+	public int hashCode() {
+		return id.hashCode();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof SANode) {
+			return ((SANode) obj).name.equals(name);
+		}
+		return false;
+	}
 }

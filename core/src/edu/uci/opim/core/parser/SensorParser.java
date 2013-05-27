@@ -83,7 +83,7 @@ public class SensorParser {
 
 			Element eElement = (Element) nNode;
 
-			int ID = Integer.parseInt(eElement.getAttribute("id"));
+			String ID = eElement.getAttribute("id");
 			node.setId(ID);
 			System.out.println("Sensor id : " + eElement.getAttribute("id"));
 			String Name = eElement.getElementsByTagName("name").item(0)

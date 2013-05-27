@@ -1,15 +1,10 @@
 package edu.uci.opim.node;
 
-public class NodeLocation {
-	public final String name;
+import edu.uci.opim.util.StringWrapper;
 
-	public NodeLocation(String locationName) {
-		this.name = locationName;
+public class NodeLocation extends StringWrapper {
+
+	public NodeLocation(String className) {
+		super(className);
 	}
-
-	@Override
-	public String toString() {
-		return name;
-	}
-
 }
