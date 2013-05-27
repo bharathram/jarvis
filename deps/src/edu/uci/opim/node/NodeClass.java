@@ -7,4 +7,9 @@ public class NodeClass {
 		this.name = className;
 	}
 
+	@Override
+	public String toString() {
+
+		return name;
+	}
 }

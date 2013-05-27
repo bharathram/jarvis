@@ -7,4 +7,9 @@ public class NodeLocation {
 		this.name = locationName;
 	}
 
+	@Override
+	public String toString() {
+		return name;
+	}
+
 }
