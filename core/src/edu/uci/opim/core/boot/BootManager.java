@@ -1,9 +1,7 @@
 package edu.uci.opim.core.boot;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -11,31 +9,21 @@ import org.apache.log4j.Logger;
 import edu.uci.opim.core.CoreManager;
 import edu.uci.opim.core.parser.RuleParser;
 import edu.uci.opim.core.rule.Rule;
-import edu.uci.opim.core.web.GatewayNode;
 import edu.uci.opim.node.NodeClass;
 import edu.uci.opim.node.NodeLocation;
 import edu.uci.opim.node.Sensor;
 
+/**
+ * Perform the boot up tasks
+ * 
+ * @author bram
+ * 
+ */
 public class BootManager {
 
-	private static BootManager instance;
-
-	public static final Logger logger = Logger.getLogger(BootManager.class);
-	private List<GatewayNode> gatewayList = new ArrayList<GatewayNode>();
-
-	/**
-	 * List of sensors that have checked in with the core.
-	 */
-	private Map<Sensor, GatewayNode> aliveSensors;
-
-	public BootManager() {
-		init();
-		run();
-
-	}
+	public static final Logger logger = Logger.getLogger(CoreManager.class);
 
 	public void init() {
-		// TODO:Initialize some of the managers
 
 		// TODO: Initialize and open the db connection
 		// TODO: Read rule conf and setup data structures

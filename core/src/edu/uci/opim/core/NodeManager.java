@@ -8,6 +8,7 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 
 import edu.uci.opim.core.rule.Rule;
+import edu.uci.opim.core.web.GatewayNode;
 import edu.uci.opim.node.Actuator;
 import edu.uci.opim.node.SANode;
 import edu.uci.opim.node.Sensor;
@@ -18,7 +19,12 @@ public class NodeManager {
 
 	private Map<String, SANode> map;
 
-	private NodeManager() {
+	/**
+	 * List of sensors that have checked in with the core.
+	 */
+	private Map<Sensor, GatewayNode> aliveSensors;
+
+	NodeManager() {
 		map = new HashMap<String, SANode>();
 	}
 
@@ -71,5 +77,12 @@ public class NodeManager {
 			ruleGrid.put(sensor, ruleList);
 		}
 		ruleList.add(rule);
+	}
+
+	public void registerNode(Sensor sensor, GatewayNode gateway) {
+		if (!map.containsKey(sensor.getName())) {
+
+		}
+
 	}
 }

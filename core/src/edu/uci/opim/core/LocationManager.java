@@ -16,7 +16,7 @@ public class LocationManager {
 	private static LocationManager instance;
 	private Map<NodeLocation, List<Rule>> ruleGrid = new HashMap<NodeLocation, List<Rule>>();
 
-	private LocationManager() {
+	LocationManager() {
 	}
 
 	public void addRule(NodeLocation location, Rule rule) {

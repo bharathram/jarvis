@@ -2,17 +2,32 @@ package edu.uci.opim.core;
 
 import edu.uci.opim.core.boot.BootManager;
 
+/**
+ * Central controller.
+ * 
+ * @author bram
+ * 
+ */
 public class CoreManager {
 
 	private static CoreManager instance;
 
-	BootManager bootManager;
-	LocationManager locManager;
-	ClassManager classManager;
-	NodeManager nodeManager;
+	private BootManager bootManager;
+	private LocationManager locManager;
+	private ClassManager classManager;
+	private NodeManager nodeManager;
+	private GatewayManager gatewayManager;
 
 	private CoreManager() {
+		// Initialize all the managers
+		locManager = new LocationManager();
+		classManager = new ClassManager();
+		nodeManager = new NodeManager();
 		bootManager = new BootManager();
+		gatewayManager = new GatewayManager();
+		// Perform the bootup tasks
+		bootManager.init();
+		bootManager.run();
 
 	}
 
@@ -37,6 +52,10 @@ public class CoreManager {
 
 	public static ClassManager getClassManager() {
 		return getInstance().classManager;
+	}
+
+	public static GatewayManager getGatewayManager() {
+		return getInstance().gatewayManager;
 	}
 
 }
