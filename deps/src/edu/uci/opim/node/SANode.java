@@ -89,7 +89,7 @@ public abstract class SANode {
 
 	@Override
 	public int hashCode() {
-		return id.hashCode();
+		return name.hashCode();
 	}
 
 	@Override

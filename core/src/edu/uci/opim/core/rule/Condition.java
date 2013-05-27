@@ -1,23 +1,27 @@
 package edu.uci.opim.core.rule;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import edu.uci.opim.core.ClassManager;
 import edu.uci.opim.core.NodeManager;
 import edu.uci.opim.node.NodeClass;
+import edu.uci.opim.node.NodeLocation;
 import edu.uci.opim.node.Sensor;
 
 public class Condition {
 	List<Predicate> predicates;
 	List<Sensor> hostList;
 	List<NodeClass> classList;
+	Set<NodeLocation> locList;
 
 	public Condition() {
-		// TODO Auto-generated constructor stub
 		predicates = new ArrayList<Predicate>();
 		hostList = new ArrayList<Sensor>();
+		locList = new HashSet<NodeLocation>();
 	}
 
 	public boolean evaluate() {
@@ -45,7 +49,7 @@ public class Condition {
 				if (nodeClass != null && !classList.contains(nodeClass)) {
 					classList.add(nodeClass);
 				}
-				// TODO:Location manager
+				locList.add(((SensorStatePredicate) predicate).location);
 			}
 		}
 	}
@@ -56,5 +60,9 @@ public class Condition {
 
 	public List<NodeClass> getClassList() {
 		return classList;
+	}
+
+	public Set<NodeLocation> getLocList() {
+		return locList;
 	}
 }

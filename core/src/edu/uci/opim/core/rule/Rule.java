@@ -1,10 +1,12 @@
 package edu.uci.opim.core.rule;
 
 import java.util.List;
+import java.util.Set;
 
 import edu.uci.opim.core.action.Action;
 import edu.uci.opim.core.exception.UnableToExecuteActionException;
 import edu.uci.opim.node.NodeClass;
+import edu.uci.opim.node.NodeLocation;
 import edu.uci.opim.node.Sensor;
 
 public class Rule {
@@ -44,6 +46,10 @@ public class Rule {
 
 	public List<NodeClass> getDependentClasses() {
 		return condition.getClassList();
+	}
+
+	public Set<NodeLocation> getDependentLocations() {
+		return condition.getLocList();
 	}
 
 	public void setAction(Action action) {
