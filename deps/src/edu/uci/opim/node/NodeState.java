@@ -9,4 +9,9 @@ public class NodeState {
 		this.id = ID;
 		this.name = stateName;
 	}
+
+	@Override
+	public String toString() {
+		return id + "->" + name;
+	}
 }

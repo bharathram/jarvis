@@ -13,6 +13,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import edu.uci.opim.core.action.Action;
+import edu.uci.opim.core.action.Step;
 import edu.uci.opim.core.rule.Condition;
 import edu.uci.opim.core.rule.Predicate;
 import edu.uci.opim.core.rule.Predicate.Operands;
@@ -51,10 +52,6 @@ public class RuleParser {
 
 			NodeList ruleNodeList = ((Element) blackListNode)
 					.getElementsByTagName("rule");
-			NodeList nList2 = doc.getElementsByTagName("condition");
-			NodeList nList3 = doc.getElementsByTagName("state");
-			NodeList nList4 = doc.getElementsByTagName("action");
-			NodeList nList5 = doc.getElementsByTagName("do");
 
 			for (int i = 0; i < ruleNodeList.getLength(); i++) {
 				System.out.println("----------------------------");
@@ -181,9 +178,31 @@ public class RuleParser {
 		// }
 	}
 
-	private Action createAction(Node actionElement) {
-		// TODO Auto-generated method stub
-		return null;
+	private Action createAction(Node actionNode) {
+		Action action = null;
+
+		if (actionNode.getNodeType() == Node.ELEMENT_NODE) {
+			action = new Action();
+			Element aElement = (Element) actionNode;
+			NodeList doElements = aElement.getElementsByTagName("do");
+			for (int i = 0; i < doElements.getLength(); i++) {
+				Node item = doElements.item(i);
+				if (actionNode.getNodeType() == Node.ELEMENT_NODE) {
+
+					Element doElement = (Element) item;
+
+					Step step = new Step();
+					step.setHost(doElement.getAttribute("host"));
+					step.setLocation(doElement.getAttribute("location"));
+					step.setSensorClass(doElement.getAttribute("class"));
+					step.setState(doElement.getTextContent());
+					System.out.println("Step :" + step);
+					action.add(step);
+				}
+			}
+
+		}
+		return action;
 	}
 
 	private Condition createCondition(Node conditionNode) {
