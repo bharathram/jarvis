@@ -1,7 +1,6 @@
 package edu.uci.opim.core.action;
 
-import edu.uci.opim.core.ClassManager;
-import edu.uci.opim.core.NodeManager;
+import edu.uci.opim.core.CoreManager;
 import edu.uci.opim.core.exception.UnableToExecuteStepException;
 import edu.uci.opim.node.NodeClass;
 import edu.uci.opim.node.NodeLocation;
@@ -19,7 +18,7 @@ public class Step {
 
 	public void setHost(String host) {
 		if (!"".equals(host)) {
-			NodeManager.getInstance().createActuator(host);
+			CoreManager.getNodeManager().createActuator(host);
 			this.host = host;
 		}
 	}
@@ -38,7 +37,7 @@ public class Step {
 
 	public void setSensorClass(String sensorClass) {
 		if (!"".equals(sensorClass)) {
-			ClassManager.getInstance().createClass(sensorClass);
+			CoreManager.getClassManager().createClass(sensorClass);
 			this.sensorClass = new NodeClass(sensorClass);
 		}
 	}

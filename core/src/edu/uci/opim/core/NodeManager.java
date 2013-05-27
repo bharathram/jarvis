@@ -13,25 +13,13 @@ import edu.uci.opim.node.SANode;
 import edu.uci.opim.node.Sensor;
 
 public class NodeManager {
-	public static final Logger logger = Logger.getLogger(NodeManager.class);
-	private static NodeManager instance;
+	private static final Logger logger = Logger.getLogger(CoreManager.class);
 	private Map<Sensor, List<Rule>> ruleGrid = new HashMap<Sensor, List<Rule>>();
 
 	private Map<String, SANode> map;
 
 	private NodeManager() {
 		map = new HashMap<String, SANode>();
-	}
-
-	public static NodeManager getInstance() {
-		if (instance == null) {
-			synchronized (NodeManager.class) {
-				if (instance == null) {
-					instance = new NodeManager();
-				}
-			}
-		}
-		return instance;
 	}
 
 	public Sensor createSensor(String name) {

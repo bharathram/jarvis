@@ -8,9 +8,7 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
-import edu.uci.opim.core.ClassManager;
-import edu.uci.opim.core.LocationManager;
-import edu.uci.opim.core.NodeManager;
+import edu.uci.opim.core.CoreManager;
 import edu.uci.opim.core.parser.RuleParser;
 import edu.uci.opim.core.rule.Rule;
 import edu.uci.opim.core.web.GatewayNode;
@@ -30,7 +28,7 @@ public class BootManager {
 	 */
 	private Map<Sensor, GatewayNode> aliveSensors;
 
-	private BootManager() {
+	public BootManager() {
 		init();
 		run();
 
@@ -64,17 +62,17 @@ public class BootManager {
 			// Map all sensors names to the rules that have them
 			List<Sensor> dependentSensors = rule.getDependentSensors();
 			for (Sensor sensor : dependentSensors) {
-				NodeManager.getInstance().addRule(sensor, rule);
+				CoreManager.getNodeManager().addRule(sensor, rule);
 			}
 			// Map all node classes to the the rules that have them
 			List<NodeClass> dependentClasses = rule.getDependentClasses();
 			for (NodeClass nodeClass : dependentClasses) {
-				ClassManager.getInstance().addRule(nodeClass, rule);
+				CoreManager.getClassManager().addRule(nodeClass, rule);
 			}
 			// Map all the locations to rules that have them
 			Set<NodeLocation> dependentLocations = rule.getDependentLocations();
 			for (NodeLocation nodeLocation : dependentLocations) {
-				LocationManager.getInstance().addRule(nodeLocation, rule);
+				CoreManager.getLocManager().addRule(nodeLocation, rule);
 			}
 		}
 		;
@@ -86,17 +84,6 @@ public class BootManager {
 
 	public void destroy() {
 
-	}
-
-	public static BootManager getInstance() {
-		if (instance == null) {
-			synchronized (BootManager.instance) {
-				if (instance == null) {
-					instance = new BootManager();
-				}
-			}
-		}
-		return instance;
 	}
 
 }

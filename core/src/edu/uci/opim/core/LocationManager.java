@@ -19,17 +19,6 @@ public class LocationManager {
 	private LocationManager() {
 	}
 
-	public static LocationManager getInstance() {
-		if (instance == null) {
-			synchronized (LocationManager.class) {
-				if (instance == null) {
-					instance = new LocationManager();
-				}
-			}
-		}
-		return instance;
-	}
-
 	public void addRule(NodeLocation location, Rule rule) {
 		List<Rule> ruleList = ruleGrid.get(location.string);
 		if (ruleList == null) {

@@ -18,27 +18,15 @@ import edu.uci.opim.node.SANode;
  * 
  */
 public class ClassManager {
-	public static final Logger logger = Logger.getLogger(ClassManager.class);
-	private static ClassManager instance;
+	private static final Logger logger = Logger.getLogger(CoreManager.class);
 
 	private Map<String, NodeClass> map;
 	private Map<NodeClass, List<SANode>> classGrid = new HashMap<NodeClass, List<SANode>>();
 	private Map<NodeClass, List<Rule>> ruleGrid = new HashMap<NodeClass, List<Rule>>();
 
-	private ClassManager() {
+	ClassManager() {
 		map = new HashMap<String, NodeClass>();
 		classGrid = new HashMap<NodeClass, List<SANode>>();
-	}
-
-	public static ClassManager getInstance() {
-		if (instance == null) {
-			synchronized (ClassManager.class) {
-				if (instance == null) {
-					instance = new ClassManager();
-				}
-			}
-		}
-		return instance;
 	}
 
 	public NodeClass createClass(String name) {

@@ -6,8 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import edu.uci.opim.core.ClassManager;
-import edu.uci.opim.core.NodeManager;
+import edu.uci.opim.core.CoreManager;
 import edu.uci.opim.node.NodeClass;
 import edu.uci.opim.node.NodeLocation;
 import edu.uci.opim.node.Sensor;
@@ -39,13 +38,15 @@ public class Condition {
 		predicates.add(predicate);
 		if (predicate instanceof SensorStatePredicate) {
 
-			Sensor sensor = NodeManager.getInstance().getSensor(
+			Sensor sensor = CoreManager.getNodeManager().getSensor(
 					((SensorStatePredicate) predicate).host);
 			if (sensor != null && !hostList.contains(sensor)) {
 				hostList.add(sensor);
 			} else {
-				NodeClass nodeClass = ClassManager.getInstance().getNodeClass(
-						((SensorStatePredicate) predicate).sensorClass.string);
+				NodeClass nodeClass = CoreManager
+						.getClassManager()
+						.getNodeClass(
+								((SensorStatePredicate) predicate).sensorClass.string);
 				if (nodeClass != null && !classList.contains(nodeClass)) {
 					classList.add(nodeClass);
 				}
