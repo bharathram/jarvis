@@ -15,6 +15,12 @@ import edu.uci.opim.node.Actuator;
 import edu.uci.opim.node.SANode;
 import edu.uci.opim.node.Sensor;
 
+/**
+ * Manages everything to do with the nodes.
+ * 
+ * @author bram
+ * 
+ */
 public class NodeManager {
 	private static final Logger logger = Logger.getLogger(CoreManager.class);
 	/**
@@ -88,7 +94,7 @@ public class NodeManager {
 		ruleList.add(rule);
 	}
 
-	public void registerNode(SANode node, GatewayNode gateway) {
+	public synchronized void registerNode(SANode node, GatewayNode gateway) {
 		if (!knownNodeMap.containsKey(node.getName())) {
 			if (node instanceof Sensor) {
 				CoreManager.getLogManager().logEvent(

@@ -7,7 +7,7 @@ import java.util.Map;
 import edu.uci.opim.core.exception.ExceptionToLog;
 import edu.uci.opim.core.exception.Priority;
 import edu.uci.opim.core.web.GatewayNode;
-import edu.uci.opim.node.Sensor;
+import edu.uci.opim.node.SANode;
 
 public class GatewayManager {
 	/**
@@ -45,10 +45,16 @@ public class GatewayManager {
 		}
 	}
 
-	public void registerSensor(Sensor sensor, String gateway) {
+	public void registerNode(SANode node, String gateway) {
 		if (gatewayList.containsKey(gateway)) {
-			CoreManager.getNodeManager().registerNode(sensor,
+			// Register the node with the node manager
+			CoreManager.getNodeManager().registerNode(node,
 					gatewayList.get(gateway));
+			// Find out the location of the node and register it with the
+			// location manager
+			CoreManager.getLocManager().registerNode(node);
+			// Find out the node class and register it with the ClassManager
+			CoreManager.getClassManager().registerNode(node);
 		} else {
 			CoreManager
 					.getLogManager()
@@ -58,5 +64,4 @@ public class GatewayManager {
 									gateway, Priority.ERROR));
 		}
 	}
-
 }

@@ -24,7 +24,7 @@ public class Step {
 	}
 
 	public void setLocation(String location) {
-		this.location = new NodeLocation(location);
+		this.location = CoreManager.getLocManager().createLocation(location);
 	}
 
 	public NodeLocation getLocation() {
