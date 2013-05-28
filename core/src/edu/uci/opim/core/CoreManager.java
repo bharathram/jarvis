@@ -17,6 +17,7 @@ public class CoreManager {
 	private ClassManager classManager;
 	private NodeManager nodeManager;
 	private GatewayManager gatewayManager;
+	private LogManager eventLogger;
 
 	private CoreManager() {
 		// Initialize all the managers
@@ -56,6 +57,10 @@ public class CoreManager {
 
 	public static GatewayManager getGatewayManager() {
 		return getInstance().gatewayManager;
+	}
+
+	public static LogManager getLogManager() {
+		return getInstance().eventLogger;
 	}
 
 }

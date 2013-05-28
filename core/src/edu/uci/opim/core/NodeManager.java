@@ -7,6 +7,8 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
+import edu.uci.opim.core.exception.ExceptionToLog;
+import edu.uci.opim.core.exception.Priority;
 import edu.uci.opim.core.rule.Rule;
 import edu.uci.opim.core.web.GatewayNode;
 import edu.uci.opim.node.Actuator;
@@ -15,17 +17,24 @@ import edu.uci.opim.node.Sensor;
 
 public class NodeManager {
 	private static final Logger logger = Logger.getLogger(CoreManager.class);
+	/**
+	 * Maps the sensor to the rules that it is associated with
+	 */
 	private Map<Sensor, List<Rule>> ruleGrid = new HashMap<Sensor, List<Rule>>();
 
-	private Map<String, SANode> map;
+	/**
+	 * Map of all known nodes.(Nodes that have atleast one rule associated with
+	 * them.
+	 */
+	private Map<String, SANode> knownNodeMap;
 
 	/**
-	 * List of sensors that have checked in with the core.
+	 * List of nodes that have checked in with the core.
 	 */
-	private Map<Sensor, GatewayNode> aliveSensors;
+	private Map<SANode, GatewayNode> aliveNodes;
 
 	NodeManager() {
-		map = new HashMap<String, SANode>();
+		knownNodeMap = new HashMap<String, SANode>();
 	}
 
 	public Sensor createSensor(String name) {
@@ -34,7 +43,7 @@ public class NodeManager {
 			logger.info("Creating sensor " + name);
 			sensor = new Sensor();
 			sensor.setName(name);
-			map.put(name, sensor);
+			knownNodeMap.put(name, sensor);
 		}
 		return (Sensor) sensor;
 	}
@@ -45,13 +54,13 @@ public class NodeManager {
 			logger.info("Creating Actuator " + name);
 			actuator = new Actuator();
 			actuator.setName(name);
-			map.put(name, actuator);
+			knownNodeMap.put(name, actuator);
 		}
 		return (Actuator) actuator;
 	}
 
 	public Sensor getSensor(String name) {
-		SANode saNode = map.get(name);
+		SANode saNode = knownNodeMap.get(name);
 		if (saNode instanceof Sensor) {
 			return (Sensor) saNode;
 		}
@@ -59,7 +68,7 @@ public class NodeManager {
 	}
 
 	public Actuator getActuator(String name) {
-		SANode saNode = map.get(name);
+		SANode saNode = knownNodeMap.get(name);
 		if (saNode instanceof Sensor) {
 			return (Actuator) saNode;
 		}
@@ -67,7 +76,7 @@ public class NodeManager {
 	}
 
 	public SANode getNode(String name) {
-		return map.get(name);
+		return knownNodeMap.get(name);
 	}
 
 	public void addRule(Sensor sensor, Rule rule) {
@@ -79,10 +88,20 @@ public class NodeManager {
 		ruleList.add(rule);
 	}
 
-	public void registerNode(Sensor sensor, GatewayNode gateway) {
-		if (!map.containsKey(sensor.getName())) {
+	public void registerNode(SANode node, GatewayNode gateway) {
+		if (!knownNodeMap.containsKey(node.getName())) {
+			if (node instanceof Sensor) {
+				CoreManager.getLogManager().logEvent(
+						new ExceptionToLog("Sensor has no rule ", node
+								.getName(), Priority.WARN));
+			} else {
+				CoreManager.getLogManager().logEvent(
+						new ExceptionToLog("Actuator has no action ", node
+								.getName(), Priority.WARN));
 
+			}
+		} else {
+			aliveNodes.put(node, gateway);
 		}
-
 	}
 }
