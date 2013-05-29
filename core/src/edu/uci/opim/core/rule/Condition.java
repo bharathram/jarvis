@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 import edu.uci.opim.core.CoreManager;
+import edu.uci.opim.core.StateChangedEvent;
 import edu.uci.opim.node.NodeClass;
 import edu.uci.opim.node.NodeLocation;
 import edu.uci.opim.node.Sensor;
@@ -23,13 +24,13 @@ public class Condition {
 		locList = new HashSet<NodeLocation>();
 	}
 
-	public boolean evaluate() {
+	public boolean evaluate(StateChangedEvent event) {
 		boolean cond = false;
 		Iterator<Predicate> iterator = predicates.iterator();
 		// TODO:Handle braces
 		while (iterator.hasNext()) {
 			Predicate predicate = (Predicate) iterator.next();
-			cond = Predicate.evaluate(cond, predicate);
+			cond = Predicate.evaluate(cond, predicate, event);
 		}
 		return cond;
 	}

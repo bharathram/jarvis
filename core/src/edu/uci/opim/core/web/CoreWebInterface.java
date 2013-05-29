@@ -24,16 +24,15 @@ public interface CoreWebInterface {
 	 * @param sensorName
 	 * @param sensor
 	 */
-	public void registerSensor(String gatewayId, String sensorName,
-			Sensor sensor);
+	public void registerSensor(String gatewayId, Sensor sensor,
+			NodeState initialState);
 
 	/**
 	 * @param gatewayId
 	 * @param actuatorNode
 	 * @param actuator
 	 */
-	public void registerActuator(String gatewayId, String actuatorNode,
-			Actuator actuator);
+	public void registerActuator(String gatewayId, Actuator actuator);
 
 	/**
 	 * Gateway invokes this once in a while to let the controller know that it

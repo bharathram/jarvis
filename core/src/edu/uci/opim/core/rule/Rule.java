@@ -3,6 +3,7 @@ package edu.uci.opim.core.rule;
 import java.util.List;
 import java.util.Set;
 
+import edu.uci.opim.core.StateChangedEvent;
 import edu.uci.opim.core.action.Action;
 import edu.uci.opim.core.exception.UnableToExecuteActionException;
 import edu.uci.opim.node.NodeClass;
@@ -35,9 +36,8 @@ public class Rule {
 		this.condition = condition;
 	}
 
-	// TODO:Add system state attribute
-	public boolean checkCondition() {
-		return condition.evaluate();
+	public boolean checkCondition(StateChangedEvent event) {
+		return condition.evaluate(event);
 	}
 
 	public List<Sensor> getDependentSensors() {

@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Observable;
+import java.util.Observer;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 
@@ -12,6 +16,7 @@ import edu.uci.opim.core.exception.Priority;
 import edu.uci.opim.core.rule.Rule;
 import edu.uci.opim.core.web.GatewayNode;
 import edu.uci.opim.node.Actuator;
+import edu.uci.opim.node.NodeState;
 import edu.uci.opim.node.SANode;
 import edu.uci.opim.node.Sensor;
 
@@ -21,7 +26,7 @@ import edu.uci.opim.node.Sensor;
  * @author bram
  * 
  */
-public class NodeManager {
+public class NodeManager extends Observable {
 	private static final Logger logger = Logger.getLogger(CoreManager.class);
 	/**
 	 * Maps the sensor to the rules that it is associated with
@@ -32,15 +37,20 @@ public class NodeManager {
 	 * Map of all known nodes.(Nodes that have atleast one rule associated with
 	 * them.
 	 */
-	private Map<String, SANode> knownNodeMap;
+	private Map<String, SANode> knownNodeMap = new HashMap<String, SANode>();
 
 	/**
 	 * List of nodes that have checked in with the core.
 	 */
-	private Map<SANode, GatewayNode> aliveNodes;
+	private Map<SANode, GatewayNode> aliveNodes = new HashMap<SANode, GatewayNode>();
+
+	/**
+	 * State of the system as reported by the the sensors.
+	 */
+	private Map<Sensor, NodeState> sysState = new HashMap<Sensor, NodeState>();
 
 	NodeManager() {
-		knownNodeMap = new HashMap<String, SANode>();
+
 	}
 
 	public Sensor createSensor(String name) {
@@ -94,7 +104,7 @@ public class NodeManager {
 		ruleList.add(rule);
 	}
 
-	public synchronized void registerNode(SANode node, GatewayNode gateway) {
+	public void registerNode(SANode node, GatewayNode gateway, NodeState state) {
 		if (!knownNodeMap.containsKey(node.getName())) {
 			if (node instanceof Sensor) {
 				CoreManager.getLogManager().logEvent(
@@ -107,7 +117,81 @@ public class NodeManager {
 
 			}
 		} else {
-			aliveNodes.put(node, gateway);
+			synchronized (this) {
+				aliveNodes.put(node, gateway);
+				if (node instanceof Sensor) {
+					sysState.put((Sensor) node, state);
+				}
+			}
+
+		}
+	}
+
+	public void handleStimulus(String gatewayId, String sensorName,
+			NodeState newState) {
+		if (!CoreManager.getGatewayManager().checkGateway(gatewayId)) {
+			CoreManager.getLogManager().logEvent(
+					new ExceptionToLog(
+							"Stimulus triggered from an unkon gateway",
+							"Gateway" + gatewayId + "Sensor name" + sensorName
+									+ "new state" + newState, Priority.ERROR));
+			return;
+		}
+		if (!aliveNodes.containsKey(sensorName)) {
+			CoreManager
+					.getLogManager()
+					.logEvent(
+							new ExceptionToLog(
+									"Stimulus triggered from an Unregistered sensor form a known gateway",
+									"Gateway" + gatewayId + "Sensor name"
+											+ sensorName + "new state"
+											+ newState, Priority.WARN));
+			return;
+
+		}
+		SANode saNode = knownNodeMap.get(sensorName);
+		if (!(saNode instanceof Sensor)) {
+			CoreManager
+					.getLogManager()
+					.logEvent(
+							new ExceptionToLog(
+									"Stimulus triggered from an uknown and unregistred sensor form a known gateway",
+									"Gateway" + gatewayId + "Sensor name"
+											+ sensorName + "new state"
+											+ newState, Priority.WARN));
+			return;
+		}
+
+		// Incase of deadlocks see here......
+		Set<Entry<Sensor, NodeState>> entrySet;
+		NodeState oldState;
+		synchronized (this) {
+			oldState = sysState.get(saNode);
+			sysState.put((Sensor) saNode, newState);
+			setChanged();
+			entrySet = sysState.entrySet();
+		}
+		notifyObservers(new StateChangedEvent((Sensor) saNode, oldState,
+				newState));
+	}
+
+	public class SensoreStateChangeHandler implements Observer {
+
+		@Override
+		public void update(Observable o, Object arg) {
+			if (arg instanceof StateChangedEvent) {
+				List<Rule> ruleList = ruleGrid
+						.get(((StateChangedEvent) arg).sensor);
+				for (Rule rule : ruleList) {
+					if (rule.checkCondition((StateChangedEvent) arg)) {
+						rule.executeAction();
+					}
+				}
+				// TODO: Identify rules where the class belongs to this sensor
+				// class
+				// TODO: Identify rules where the location belogs to this sensor
+				// class
+			}
 		}
 	}
 }

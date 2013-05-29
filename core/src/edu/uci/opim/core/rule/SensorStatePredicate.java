@@ -1,6 +1,7 @@
 package edu.uci.opim.core.rule;
 
 import edu.uci.opim.core.CoreManager;
+import edu.uci.opim.core.StateChangedEvent;
 import edu.uci.opim.node.NodeClass;
 import edu.uci.opim.node.NodeLocation;
 
@@ -45,7 +46,7 @@ public class SensorStatePredicate extends Predicate {
 	}
 
 	@Override
-	public boolean evaluate() {
+	public boolean evaluate(StateChangedEvent evt) {
 		// TODO Auto-generated method stub
 		return false;
 	}

@@ -1,5 +1,7 @@
 package edu.uci.opim.core.rule;
 
+import edu.uci.opim.core.StateChangedEvent;
+
 public class TimePredicate extends Predicate {
 
 	long start, end;
@@ -28,7 +30,7 @@ public class TimePredicate extends Predicate {
 	}
 
 	@Override
-	public boolean evaluate() {
+	public boolean evaluate(StateChangedEvent evt) {
 		// TODO Auto-generated method stub
 		return false;
 	}
