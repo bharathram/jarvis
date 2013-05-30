@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Observable;
-import java.util.Observer;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -175,23 +174,14 @@ public class NodeManager extends Observable {
 				newState));
 	}
 
-	public class SensoreStateChangeHandler implements Observer {
-
-		@Override
-		public void update(Observable o, Object arg) {
-			if (arg instanceof StateChangedEvent) {
-				List<Rule> ruleList = ruleGrid
-						.get(((StateChangedEvent) arg).sensor);
-				for (Rule rule : ruleList) {
-					if (rule.checkCondition((StateChangedEvent) arg)) {
-						rule.executeAction();
-					}
-				}
-				// TODO: Identify rules where the class belongs to this sensor
-				// class
-				// TODO: Identify rules where the location belogs to this sensor
-				// class
-			}
-		}
+	/**
+	 * Gets a list of rules associated with this sensor;
+	 * 
+	 * @param sensor
+	 * @return
+	 */
+	List<Rule> getRuleList(Sensor sensor) {
+		return ruleGrid.get(sensor);
 	}
+
 }

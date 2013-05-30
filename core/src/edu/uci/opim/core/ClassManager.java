@@ -97,4 +97,15 @@ public class ClassManager {
 		// TODO: disassoicate the rule with the class;
 	}
 
+	/**
+	 * Gets a list if rules associated with the node class
+	 * 
+	 * @param nClass
+	 * @return
+	 */
+	List<Rule> getRuleList(NodeClass nClass) {
+		return ruleGrid.get(nClass);
+
+	}
+
 }

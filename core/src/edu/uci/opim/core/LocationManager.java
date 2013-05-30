@@ -104,4 +104,15 @@ public class LocationManager {
 	public void deRegisterRule(Rule rule) {
 		// TODO: Disassociate the rule and the location
 	}
+
+	/**
+	 * Gets the list of rules associated with this node location.
+	 * 
+	 * @param loc
+	 * @return
+	 */
+	List<Rule> getRuleList(NodeLocation loc) {
+		return ruleGrid.get(loc);
+
+	}
 }

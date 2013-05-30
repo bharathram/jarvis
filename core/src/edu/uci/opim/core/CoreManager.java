@@ -27,7 +27,7 @@ public class CoreManager {
 		bootManager = new BootManager();
 		gatewayManager = new GatewayManager();
 		// Registerinf statechange listener
-		nodeManager.addObserver(new SensoreStateChangeHandler());
+		nodeManager.addObserver(new SensorStateChangeHandler());
 
 		// Perform the bootup tasks
 
