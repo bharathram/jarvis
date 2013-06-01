@@ -51,7 +51,7 @@ public class Step {
 	}
 
 	public void execute() throws UnableToExecuteStepException {
-		// TODO Auto-generated method stub
+		CoreManager.getGatewayManager().response(this);
 
 	}
 

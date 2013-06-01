@@ -9,8 +9,8 @@ import java.net.InetAddress;
  * 
  */
 public class GatewayNode {
-	final InetAddress ip;
-	final String gateKey;
+	public final InetAddress ip;
+	public final String gateKey;
 	private long checkin;
 
 	public GatewayNode(InetAddress address) {

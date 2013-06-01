@@ -1,11 +1,16 @@
 package edu.uci.opim.core;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Set;
 
+import edu.uci.opim.core.exception.ExceptionToLog;
+import edu.uci.opim.core.exception.Priority;
+import edu.uci.opim.core.exception.UnableToExecuteActionException;
+import edu.uci.opim.core.exception.UnableToExecuteStepException;
 import edu.uci.opim.core.rule.Rule;
 import edu.uci.opim.node.NodeClass;
 
@@ -35,7 +40,20 @@ public class SensorStateChangeHandler implements Observer {
 			// Process the rules
 			for (Rule rule : ruleSet) {
 				if (rule.checkCondition((StateChangedEvent) arg)) {
-					rule.executeAction();
+					try {
+						rule.executeAction();
+					} catch (UnableToExecuteActionException e) {
+						Iterator<UnableToExecuteStepException> iterator = e
+								.iterator();
+						while (iterator.hasNext()) {
+							UnableToExecuteStepException exception = iterator
+									.next();
+							CoreManager.getLogManager().logEvent(
+									new ExceptionToLog(exception.getMessage()
+											+ exception.step.toString(), rule,
+											Priority.FATAL));
+						}
+					}
 				}
 			}
 		}

@@ -94,6 +94,11 @@ public class NodeManager extends Observable {
 		return knownNodeMap.get(name);
 	}
 
+	public GatewayNode getGatewayNode(SANode node) {
+		return aliveNodes.get(node);
+
+	}
+
 	public void addRule(Sensor sensor, Rule rule) {
 		List<Rule> ruleList = ruleGrid.get(sensor.getName());
 		if (ruleList == null) {

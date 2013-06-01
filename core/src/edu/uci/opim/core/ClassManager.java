@@ -108,4 +108,8 @@ public class ClassManager {
 
 	}
 
+	public List<SANode> getNodeList(NodeClass nclass) {
+		return classGrid.get(nclass);
+	}
+
 }
