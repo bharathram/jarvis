@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import edu.uci.opim.core.exception.UnableToExecuteActionException;
+import edu.uci.opim.core.exception.UnableToExecuteStepException;
 
 public class Action {
 	protected final List<Step> list = new ArrayList<Step>();
@@ -20,7 +21,7 @@ public class Action {
 			try {
 				Step step = (Step) iterator.next();
 				step.execute();
-			} catch (UnableToExecuteActionException e) {
+			} catch (UnableToExecuteStepException e) {
 				if (actionException == null) {
 					actionException = new UnableToExecuteActionException();
 				}

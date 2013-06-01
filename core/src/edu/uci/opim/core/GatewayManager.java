@@ -1,12 +1,18 @@
 package edu.uci.opim.core;
 
 import java.net.InetAddress;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import edu.uci.opim.core.action.Step;
 import edu.uci.opim.core.exception.ExceptionToLog;
 import edu.uci.opim.core.exception.Priority;
+import edu.uci.opim.core.exception.UnableToExecuteStepException;
 import edu.uci.opim.core.web.GatewayNode;
+import edu.uci.opim.node.NodeClass;
+import edu.uci.opim.node.NodeLocation;
 import edu.uci.opim.node.NodeState;
 import edu.uci.opim.node.SANode;
 
@@ -69,5 +75,77 @@ public class GatewayManager {
 
 	public boolean checkGateway(String gatewayId) {
 		return gatewayList.containsKey(gatewayId);
+	}
+
+	/**
+	 * Response to the stimulus via the actuators
+	 * 
+	 * @param step
+	 * @throws UnableToExecuteStepException
+	 */
+	public void response(Step step) throws UnableToExecuteStepException {
+		List<SANode> actuators = new ArrayList<SANode>();
+		// Get attributes of the step
+		String host = step.getHost();
+		NodeClass nClass = step.getSensorClass();
+		NodeLocation location = step.getLocation();
+
+		// Filter out nodes with whom we need to communicate
+		if (host != null) {
+			// If there has been a host specified
+			actuators.add(CoreManager.getNodeManager().getActuator(host));
+		} else if (nClass != null) {
+			// If there is a class of nodes to whom we need to communicate
+			List<SANode> nodeList = CoreManager.getClassManager().getNodeList(
+					nClass);
+			if (nodeList == null) {
+				throw new UnableToExecuteStepException(step,
+						"Cant find class list , this should not happen");
+			}
+			if (location == null) {
+				// No location based filter
+				actuators.addAll(nodeList);
+			} else {
+				// Apply location based filter
+				for (SANode saNode : nodeList) {
+					if (location.equals(saNode.getLocation())) {
+						actuators.add(saNode);
+					}
+				}
+			}
+			// Apply the step to each of the identified nodes
+			String msg = "";
+			for (SANode saNode : actuators) {
+				if (CoreManager.getNodeManager().getGatewayNode(saNode) != null) {
+					execute(saNode, step);
+				} else {
+					msg += saNode.toString() + " , ";
+				}
+			}
+			if (!"".equals(msg)) {
+				throw new UnableToExecuteStepException(step,
+						"Unable to connect to " + msg);
+			}
+		}
+	}
+
+	private void execute(SANode node, Step step)
+			throws UnableToExecuteStepException {
+
+		if (node == null) {
+			throw new UnableToExecuteStepException(step,
+					"Unknown node. This should not happen ");
+		}
+
+		GatewayNode gatewayNode = CoreManager.getNodeManager().getGatewayNode(
+				node);
+		if (gatewayNode == null) {
+			throw new UnableToExecuteStepException(step,
+					"Unable to connect to target node");
+		}
+		// TODO:
+		// Invoke the gateway stub and call
+		// actionOnNode(String node, NodeState newState,Object parameter);
+
 	}
 }

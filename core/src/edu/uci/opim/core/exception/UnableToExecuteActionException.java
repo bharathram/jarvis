@@ -4,16 +4,16 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class UnableToExecuteActionException extends RuntimeException implements
-		Iterable<RuntimeException> {
-	private List<RuntimeException> list = new ArrayList<RuntimeException>();
+public class UnableToExecuteActionException extends Exception implements
+		Iterable<UnableToExecuteStepException> {
+	private List<UnableToExecuteStepException> list = new ArrayList<UnableToExecuteStepException>();
 
-	public void add(RuntimeException exception) {
+	public void add(UnableToExecuteStepException exception) {
 		list.add(exception);
 	}
 
 	@Override
-	public Iterator<RuntimeException> iterator() {
+	public Iterator<UnableToExecuteStepException> iterator() {
 		return list.iterator();
 	}
 
