@@ -22,4 +22,5 @@ public class ExceptionToLog {
 		return DateFormat.getDateTimeInstance().format(time) + ":" + message
 				+ "[" + obj.toString() + "]";
 	}
+
 }
