@@ -2,27 +2,20 @@ package edu.com.opim.gateway.web;
 
 import javax.jws.WebService;
 
+import org.apache.log4j.Logger;
+
 import edu.uci.opim.node.NodeState;
 
 @WebService(endpointInterface = "edu.com.opim.gateway.web.GatewayWebInterface", serviceName = "GatewayService")
 public class GatewayWebInterfaceImpl implements GatewayWebInterface {
+	Logger logger = Logger.getLogger(GatewayWebInterface.class);
 
+	@Override
 	public Boolean actionOnNode(String node, NodeState newState,
 			Object parameter) {
-
 		// TODO Auto-generated method stub
-		return null;
+		logger.debug("GatewayWebInterfaceImpl.actionOnNode() Node:" + node
+				+ " New state " + newState + "Object Paramert" + parameter);
+		return true;
 	}
-
-	public Integer actionOnClass(String nClass, NodeState newState,
-			Object parameter) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public NodeState getState(String node) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

@@ -30,23 +30,4 @@ public interface GatewayWebInterface {
 	public Boolean actionOnNode(String node, NodeState newState,
 			Object parameter) throws AxisFault;
 
-	/**
-	 * Perform an action on a given class of nodes on this gateway
-	 * 
-	 * @param nClass
-	 * @param newState
-	 * @param parameter
-	 * @return number of nodes on which the action was successful
-	 */
-	public Integer actionOnClass(String nClass, NodeState newState,
-			Object parameter);
-
-	/**
-	 * Query a sensor state on a given sensor node
-	 * 
-	 * @param node
-	 * @return
-	 */
-	public NodeState getState(String node);
-
 }
