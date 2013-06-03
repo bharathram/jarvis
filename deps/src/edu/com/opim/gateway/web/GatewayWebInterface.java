@@ -1,5 +1,9 @@
 package edu.com.opim.gateway.web;
 
+import javax.jws.WebService;
+
+import org.apache.axis2.AxisFault;
+
 import edu.uci.opim.node.NodeState;
 
 /**
@@ -8,6 +12,7 @@ import edu.uci.opim.node.NodeState;
  * @author bram
  * 
  */
+@WebService
 public interface GatewayWebInterface {
 
 	/**
@@ -19,9 +24,11 @@ public interface GatewayWebInterface {
 	 * @param parameter
 	 *            optional parameter
 	 * @return if the action was successful
+	 * @throws AxisFault
 	 */
+
 	public Boolean actionOnNode(String node, NodeState newState,
-			Object parameter);
+			Object parameter) throws AxisFault;
 
 	/**
 	 * Perform an action on a given class of nodes on this gateway
