@@ -122,7 +122,7 @@ public class SensorParser {
 							+ ((Element) nNode1).getAttribute("id"));
 					System.out.println("state value:"
 							+ ((Element) nNode1).getTextContent());
-					NodeState state = new NodeState(id, stateName);
+					NodeState state = new NodeState(stateName);
 					node.addState(state);
 				}
 
