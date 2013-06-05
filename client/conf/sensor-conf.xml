@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<configuration> 
+
+	<actuator id="BZ1">
+		<name>Buzzer</name>
+		<class>buzzer</class>
+		<location>lab</location>
+		<state id="BeepEmergency">State one </state>
+		<state id="IntruderAlert">Earthquake!</state>
+		<ws-path>./plugins/Buzzer.jar</ws-path>
+	</actuator>
+	<actuator id="CAM1">
+		<name>Web cam</name>
+		<class>camera</class>
+		<location>lab</location>		
+		<ws-path>./plugins/WebCam.jar</ws-path>
+	</actuator>
+	<sensor id="ETH1">
+		<name>Earthquake</name>
+		<class>seismic</class>
+		<location>lab</location>
+		<state id="Earthquake high">Major quake</state>
+		<state id="Earthquake Low">Mild tremor</state>
+		<ws-path>./plugins/seismic.jar</ws-path>
+	</sensor>
+		
+</configuration> 

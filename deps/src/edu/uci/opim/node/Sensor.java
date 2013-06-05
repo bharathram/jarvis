@@ -13,4 +13,10 @@ public class Sensor extends SANode {
 		return mode;
 	}
 
+	@Override
+	public String toString() {
+
+		return super.toString() + " Module " + mode;
+	}
+
 }

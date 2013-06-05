@@ -1,7 +1,9 @@
 package edu.uci.jarvis.seismic;
 
+import net.xeoh.plugins.base.annotations.PluginImplementation;
 import edu.uci.jarvis.applet.SensorSimMod;
 
+@PluginImplementation
 public class EarthquakeSensor extends SensorSimMod {
 
 	/**
@@ -9,14 +11,7 @@ public class EarthquakeSensor extends SensorSimMod {
 	 */
 
 	public EarthquakeSensor() {
-		// TODO Auto-generated constructor stub
 		super("Earthquake Sensor", new String[] { "Earthquake high",
 				"Earthquake Low" });
 	}
-
-	public static void main(String[] args) {
-		EarthquakeSensor sen = new EarthquakeSensor();
-
-	}
-
 }

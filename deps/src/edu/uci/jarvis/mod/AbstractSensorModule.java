@@ -16,7 +16,7 @@ public class AbstractSensorModule extends Observable implements SensorModule {
 	 *             if the parameter o is null.
 	 */
 	public void addObserver(GatewayInterface o) {
-		addObserver(o);
+		super.addObserver(o);
 	}
 
 	/**

@@ -8,6 +8,7 @@ import org.apache.axis2.AxisFault;
 import org.apache.axis2.engine.AxisServer;
 import org.apache.log4j.Logger;
 
+import edu.com.opim.gateway.web.ServerUtils;
 import edu.uci.opim.core.CoreManager;
 import edu.uci.opim.core.parser.RuleParser;
 import edu.uci.opim.core.rule.Rule;
@@ -33,7 +34,7 @@ public class BootManager {
 			setupRuleSet();
 
 			// Start web services
-			AxisServer axisServer = new AxisServer();
+			AxisServer axisServer = ServerUtils.getServer();
 
 			axisServer.deployService(CoreWebInterfaceImpl.class.getName());
 		} catch (AxisFault e) {
@@ -92,4 +93,8 @@ public class BootManager {
 
 	}
 
+	public static void main(String[] args) {
+		BootManager mgr = new BootManager();
+		mgr.init();
+	}
 }

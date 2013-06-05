@@ -14,6 +14,10 @@ import edu.uci.jarvis.mod.SensorModule;
  * 
  */
 public class LoaderUtils {
+	private LoaderUtils() {
+		// Should not be invoked this is a Utility class
+	}
+
 	private static PluginManager pm = PluginManagerFactory
 			.createPluginManager();
 
@@ -23,7 +27,13 @@ public class LoaderUtils {
 	}
 
 	public static SensorModule getSensorModule(String jarPath) {
-		pm.addPluginsFrom(new File(jarPath).toURI());
-		return pm.getPlugin(SensorModule.class);
+		File file = new File(jarPath);
+		System.out.println("Attempting to load file at " + file.getPath());
+		pm.addPluginsFrom(file.toURI());
+		SensorModule plugin = pm.getPlugin(SensorModule.class);
+		if (plugin == null) {
+			throw new RuntimeException("No plugin found at " + jarPath);
+		}
+		return plugin;
 	}
 }

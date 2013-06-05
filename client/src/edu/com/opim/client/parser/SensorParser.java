@@ -71,7 +71,7 @@ public class SensorParser {
 			e.printStackTrace();
 			throw new XMLParseException();
 		}
-		return null;
+		return nodes;
 	}
 
 	private SANode createSAN(Node nNode, boolean isSensor) {
@@ -135,22 +135,20 @@ public class SensorParser {
 
 			}
 
-			LoaderUtils load = new LoaderUtils();
 			String confPath = eElement.getElementsByTagName("ws-path").item(0)
 					.getTextContent();
-			if (isSensor)
-				((Sensor) node).setMode(((AbstractSensorModule) load
-						.getSensorModule(confPath)));
-			else
-				load.getActuatorModule(confPath);
-
-			System.out.println("ws-path : "
-					+ eElement.getElementsByTagName("ws-path").item(0)
-							.getTextContent());
+			System.out.println("ws-path : " + confPath);
+			if (isSensor) {
+				AbstractSensorModule sensorModule = (AbstractSensorModule) LoaderUtils
+						.getSensorModule(confPath);
+				((Sensor) node).setMode(sensorModule);
+			} else {
+				((Actuator) node).setMode(LoaderUtils
+						.getActuatorModule(confPath));
+			}
 		}
 		return node;
 	}
-
 	/*
 	 * public static void main(String argv[]) { //SensorParser par = new
 	 * SensorParser("sensor-conf.xml"); try { par.parse(); } catch
