@@ -35,6 +35,7 @@ public class GatewayBootManager {
 			}
 			// Checkin with the core
 			GatewayController.getInstance().register(GatewayConfig.WSDL);
+			GatewayController.getInstance().registerNodes();
 		} catch (AxisFault e) {
 			System.out.println("FATAL Error while starting web service ");
 			System.exit(-2);

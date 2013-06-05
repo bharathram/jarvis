@@ -42,11 +42,6 @@ public class SensorSimMod extends AbstractSensorModule {
 	// gui.start();
 	// }
 
-	public void notify(NodeState n) {
-		System.out.println("SensorSimMod.notify()" + n);
-		notifyObservers(n);
-	}
-
 	class Applets extends Applet implements ActionListener {
 		@Override
 		public void init() {

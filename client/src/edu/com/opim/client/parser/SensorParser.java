@@ -12,7 +12,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import edu.uci.jarvis.mod.AbstractSensorModule;
 import edu.uci.opim.core.exception.XMLParseException;
 import edu.uci.opim.node.Actuator;
 import edu.uci.opim.node.NodeClass;
@@ -20,7 +19,6 @@ import edu.uci.opim.node.NodeLocation;
 import edu.uci.opim.node.NodeState;
 import edu.uci.opim.node.SANode;
 import edu.uci.opim.node.Sensor;
-import edu.uci.opim.util.LoaderUtils;
 
 public class SensorParser {
 	String fileName;
@@ -80,10 +78,8 @@ public class SensorParser {
 		SANode node;
 		if (isSensor) {
 			node = new Sensor();
-			node.setModule("sensor");
 		} else {
 			node = new Actuator();
-			node.setModule("actuator");
 		}
 
 		if (nNode.getNodeType() == Node.ELEMENT_NODE) {
@@ -137,15 +133,17 @@ public class SensorParser {
 
 			String confPath = eElement.getElementsByTagName("ws-path").item(0)
 					.getTextContent();
+			node.setConfPath(confPath);
 			System.out.println("ws-path : " + confPath);
-			if (isSensor) {
-				AbstractSensorModule sensorModule = (AbstractSensorModule) LoaderUtils
-						.getSensorModule(confPath);
-				((Sensor) node).setMode(sensorModule);
-			} else {
-				((Actuator) node).setMode(LoaderUtils
-						.getActuatorModule(confPath));
-			}
+			// if (isSensor) {
+			// AbstractSensorModule sensorModule = (AbstractSensorModule)
+			// LoaderUtils
+			// .getSensorModule(confPath);
+			// ((Sensor) node).setMode(sensorModule);
+			// } else {
+			// ((Actuator) node).setMode(LoaderUtils
+			// .getActuatorModule(confPath));
+			// }
 		}
 		return node;
 	}

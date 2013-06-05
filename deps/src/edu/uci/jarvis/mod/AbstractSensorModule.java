@@ -2,6 +2,8 @@ package edu.uci.jarvis.mod;
 
 import java.util.Observable;
 
+import edu.uci.opim.node.NodeState;
+
 public class AbstractSensorModule extends Observable implements SensorModule {
 
 	/**
@@ -16,6 +18,7 @@ public class AbstractSensorModule extends Observable implements SensorModule {
 	 *             if the parameter o is null.
 	 */
 	public void addObserver(GatewayInterface o) {
+		System.out.println("Adding ipserver " + o);
 		super.addObserver(o);
 	}
 
@@ -28,6 +31,12 @@ public class AbstractSensorModule extends Observable implements SensorModule {
 	 */
 	public void deleteObserver(GatewayInterface o) {
 		deleteObserver(o);
+	}
+
+	protected void notify(NodeState n) {
+		System.out.println("SensorSimMod.notify()" + n);
+		setChanged();
+		notifyObservers(n);
 	}
 
 }

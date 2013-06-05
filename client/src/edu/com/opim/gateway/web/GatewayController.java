@@ -16,11 +16,14 @@ import edu.com.opim.core.stub.DynamicCoreWebClient;
 import edu.uci.jarvis.mod.AbstractSensorModule;
 import edu.uci.jarvis.mod.ActuatorModule;
 import edu.uci.jarvis.mod.GatewayInterface;
+import edu.uci.jarvis.mod.SensorModule;
 import edu.uci.opim.client.boot.GatewayConfig;
 import edu.uci.opim.core.exception.XMLParseException;
 import edu.uci.opim.node.Actuator;
+import edu.uci.opim.node.NodeState;
 import edu.uci.opim.node.SANode;
 import edu.uci.opim.node.Sensor;
+import edu.uci.opim.util.LoaderUtils;
 
 /**
  * Singleton class for all the functionalities of the gateway.
@@ -44,7 +47,9 @@ public class GatewayController implements GatewayInterface {
 	 * Mapping of all the classes to the
 	 */
 	private Map<String, Actuator> ActuatorMap = new HashMap<String, Actuator>();
+	private Map<String, ActuatorModule> actModuleMap = new HashMap<String, ActuatorModule>();
 	private Map<AbstractSensorModule, Sensor> SensorMap = new HashMap<AbstractSensorModule, Sensor>();
+	private Map<String, SensorModule> sensorModuleMap = new HashMap<String, SensorModule>();
 
 	private GatewayController() {
 
@@ -57,9 +62,9 @@ public class GatewayController implements GatewayInterface {
 
 	public boolean action(String node, Object state) {
 		if (ActuatorMap.containsKey(node)) {
-			Actuator ac = ActuatorMap.get(node);
+			// Actuator ac = ActuatorMap.get(node);
 
-			ActuatorModule am = ac.getMode();
+			ActuatorModule am = actModuleMap.get(node);
 			am.update(this, state);
 		}
 		return true;
@@ -88,9 +93,11 @@ public class GatewayController implements GatewayInterface {
 				if (nodeList.get(y) instanceof Sensor) {
 					System.out.println("Loading plugin for " + nodeList.get(y));
 					Sensor temp = (Sensor) nodeList.get(y);
-					AbstractSensorModule abs = temp.getMode();
+					AbstractSensorModule abs = (AbstractSensorModule) LoaderUtils
+							.getSensorModule(temp.getConfPath());
 					abs.addObserver(this);
 					SensorMap.put(abs, temp);
+					sensorModuleMap.put(temp.getName(), abs);
 				} else {
 
 					Actuator temp = (Actuator) nodeList.get(y);
@@ -98,6 +105,9 @@ public class GatewayController implements GatewayInterface {
 					// ActuatorModule act = temp.getMode();
 					String name = temp.getName();
 					ActuatorMap.put(name, temp);
+					ActuatorModule actuatorModule = LoaderUtils
+							.getActuatorModule(temp.getConfPath());
+					actModuleMap.put(name, actuatorModule);
 				}
 
 			}
@@ -112,11 +122,25 @@ public class GatewayController implements GatewayInterface {
 
 	@Override
 	public void update(Observable SenMod, Object obj1) {
+		System.out.println("Update received from sensor " + SenMod + "info "
+				+ obj1);
 		// TODO Auto-generated method stub
 		if (SensorMap.containsKey(SenMod)) {
-			Sensor sen = SensorMap.get(SenMod);
-			sen.getName();
-			obj1.toString();
+			try {
+				Sensor sen = SensorMap.get(SenMod);
+				if (obj1 != null) {
+					coreStub.stimulus(gatewayId, sen.getName(), new NodeState(
+							obj1.toString()));
+				} else {
+					coreStub.stimulus(gatewayId, sen.getName(), new NodeState(
+							""));
+
+				}
+			} catch (AxisFault e) {
+				e.printStackTrace();
+				System.out
+						.println("[ERROR] Unable to forward stimulus to server");
+			}
 		}
 
 	}
@@ -149,5 +173,22 @@ public class GatewayController implements GatewayInterface {
 
 		gatewayId = coreStub.registerGateway(key);
 		startHeartBeat();
+	}
+
+	public void registerNodes() {
+		for (SANode node : nodeList) {
+			try {
+				if (node instanceof Sensor) {
+					coreStub.registerSensor(gatewayId, (Sensor) node,
+							new NodeState(""));
+				} else {
+					coreStub.registerActuator(gatewayId, (Actuator) node);
+
+				}
+			} catch (AxisFault e) {
+				e.printStackTrace();
+			}
+
+		}
 	}
 }
