@@ -2,6 +2,7 @@ package edu.uci.jarvis.applet;
 
 import java.applet.Applet;
 import java.awt.Button;
+import java.awt.Color;
 import java.awt.Label;
 import java.awt.TextField;
 import java.awt.event.ActionEvent;
@@ -33,8 +34,10 @@ public class SensorSimMod extends AbstractSensorModule {
 		// public void run() {
 		final JFrame frame = new JFrame();
 		frame.getContentPane().add(ap);
-		// TODO Auto-generated method stub
 		ap.init();
+		frame.setSize(ap.getSize());
+		// TODO Auto-generated method stub
+
 		frame.setVisible(true);
 	}
 
@@ -45,13 +48,17 @@ public class SensorSimMod extends AbstractSensorModule {
 	class Applets extends Applet implements ActionListener {
 		@Override
 		public void init() {
+			setBounds(0, 0, 350, 250);
+			setBackground(Color.gray);
 			System.out.println("SensorSimMod.Applets.init()");
 			Button state;
 			Label label1 = new Label("Sensor Name:");
 
 			label1.setVisible(true);
 			Label label2 = new Label(SensorName);
+
 			Label label3 = new Label("States:");
+
 			add(label1);
 			add(label2);
 			add(label3);
@@ -70,5 +77,7 @@ public class SensorSimMod extends AbstractSensorModule {
 		}
 
 		TextField textField1, textField2;
+
 	}
+
 }
