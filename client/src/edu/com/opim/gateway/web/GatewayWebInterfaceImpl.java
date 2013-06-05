@@ -16,6 +16,6 @@ public class GatewayWebInterfaceImpl implements GatewayWebInterface {
 		// TODO Auto-generated method stub
 		logger.debug("GatewayWebInterfaceImpl.actionOnNode() Node:" + node
 				+ " New state " + newState + "Object Paramert" + parameter);
-		return true;
+		return GatewayController.getInstance().action(node, newState);
 	}
 }

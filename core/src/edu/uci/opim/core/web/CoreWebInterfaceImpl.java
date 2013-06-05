@@ -5,6 +5,7 @@ import javax.jws.WebService;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.engine.AxisServer;
 
+import edu.uci.opim.core.CoreManager;
 import edu.uci.opim.node.Actuator;
 import edu.uci.opim.node.NodeState;
 import edu.uci.opim.node.Sensor;
@@ -21,12 +22,10 @@ public class CoreWebInterfaceImpl implements CoreWebInterface {
 	 */
 	@Override
 	public String registerGateway(String ip, String key) {
-		String x = "CoreWebInterfaceImpl.registerGateway() InetAddress" + ip
-				+ "Key:" + key;
-		System.out.println(x);
-		return x;
+		System.out.println("CoreWebInterfaceImpl.registerGateway() InetAddress"
+				+ ip + "Key:" + key);
 
-		// return CoreManager.getGatewayManager().registerGateway(ip);
+		return CoreManager.getGatewayManager().registerGateway(ip);
 	}
 
 	/*
@@ -42,8 +41,8 @@ public class CoreWebInterfaceImpl implements CoreWebInterface {
 		System.out.println("CoreWebInterfaceImpl.registerSensor() gateway :"
 				+ gatewayId + " sensor " + sensor + " node state "
 				+ initialState);
-		// CoreManager.getGatewayManager().registerNode(sensor, gatewayId,
-		// initialState);
+		CoreManager.getGatewayManager().registerNode(sensor, gatewayId,
+				initialState);
 
 	}
 
@@ -59,8 +58,7 @@ public class CoreWebInterfaceImpl implements CoreWebInterface {
 		System.out.println("CoreWebInterfaceImpl.registerActuator()gatewaty "
 				+ gatewayId + " Actuator " + actuator);
 
-		// CoreManager.getGatewayManager().registerNode(actuator, gatewayId,
-		// null);
+		CoreManager.getGatewayManager().registerNode(actuator, gatewayId, null);
 	}
 
 	/*
@@ -73,7 +71,7 @@ public class CoreWebInterfaceImpl implements CoreWebInterface {
 		System.out.println("CoreWebInterfaceImpl.heartbeat() gateway"
 				+ gatewayId);
 
-		// CoreManager.getGatewayManager().checkIn(gatewayId);
+		CoreManager.getGatewayManager().checkIn(gatewayId);
 	}
 
 	/*
@@ -88,8 +86,8 @@ public class CoreWebInterfaceImpl implements CoreWebInterface {
 				+ gatewayId + " Sensotr name " + sensorName + " news state "
 				+ newState);
 
-		// CoreManager.getNodeManager().handleStimulus(gatewayId, sensorName,
-		// newState);
+		CoreManager.getNodeManager().handleStimulus(gatewayId, sensorName,
+				newState);
 	}
 
 	/*

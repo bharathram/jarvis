@@ -1,4 +1,4 @@
-package edu.uci.opim.core.parser;
+package edu.com.opim.client.parser;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -12,6 +12,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import edu.uci.jarvis.mod.AbstractSensorModule;
 import edu.uci.opim.core.exception.XMLParseException;
 import edu.uci.opim.node.Actuator;
 import edu.uci.opim.node.NodeClass;
@@ -19,16 +20,20 @@ import edu.uci.opim.node.NodeLocation;
 import edu.uci.opim.node.NodeState;
 import edu.uci.opim.node.SANode;
 import edu.uci.opim.node.Sensor;
+import edu.uci.opim.util.LoaderUtils;
 
 public class SensorParser {
 	String fileName;
+	List<SANode> nodes;
 
 	public SensorParser(String filePath) {
 		this.fileName = filePath;
+		// return nodes;
+
 	}
 
 	public List<SANode> parse() throws XMLParseException {
-		List<SANode> nodes = new ArrayList<SANode>();
+		nodes = new ArrayList<SANode>();
 		try {
 			File fXmlFile = new File(fileName);
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory
@@ -75,8 +80,10 @@ public class SensorParser {
 		SANode node;
 		if (isSensor) {
 			node = new Sensor();
+			node.setModule("sensor");
 		} else {
 			node = new Actuator();
+			node.setModule("actuator");
 		}
 
 		if (nNode.getNodeType() == Node.ELEMENT_NODE) {
@@ -127,9 +134,16 @@ public class SensorParser {
 				}
 
 			}
+
+			LoaderUtils load = new LoaderUtils();
 			String confPath = eElement.getElementsByTagName("ws-path").item(0)
 					.getTextContent();
-			node.setConfPath(confPath);
+			if (isSensor)
+				((Sensor) node).setMode(((AbstractSensorModule) load
+						.getSensorModule(confPath)));
+			else
+				load.getActuatorModule(confPath);
+
 			System.out.println("ws-path : "
 					+ eElement.getElementsByTagName("ws-path").item(0)
 							.getTextContent());
@@ -137,14 +151,13 @@ public class SensorParser {
 		return node;
 	}
 
-	public static void main(String argv[]) {
-		SensorParser par = new SensorParser("sensor-conf.xml");
-		try {
-			par.parse();
-		} catch (XMLParseException e) {
-
-			e.printStackTrace();
-		}
-
-	}
+	/*
+	 * public static void main(String argv[]) { //SensorParser par = new
+	 * SensorParser("sensor-conf.xml"); try { par.parse(); } catch
+	 * (XMLParseException e) {
+	 * 
+	 * e.printStackTrace(); }
+	 * 
+	 * }
+	 */
 }

@@ -9,11 +9,11 @@ import java.net.InetAddress;
  * 
  */
 public class GatewayNode {
-	public final InetAddress ip;
+	public final String ip;
 	public final String gateKey;
 	private long checkin;
 
-	public GatewayNode(InetAddress address) {
+	public GatewayNode(String address) {
 		ip = address;
 		this.gateKey = ip.toString();
 		checkin = System.currentTimeMillis();

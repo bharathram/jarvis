@@ -14,6 +14,8 @@ public class SensorStatePredicate extends Predicate {
 	NodeLocation location;
 	NodeClass sensorClass;
 	String host;
+	String nodeState;
+	String oper;
 
 	public String getHost() {
 		return host;
@@ -45,10 +47,39 @@ public class SensorStatePredicate extends Predicate {
 		}
 	}
 
+	public String getNodeState() {
+		return nodeState;
+	}
+
+	public void setNodeState(String nodeState) {
+		this.nodeState = nodeState;
+	}
+
+	public void setOper(String oper) {
+		this.oper = oper;
+	}
+
+	public String getOper() {
+		return oper;
+	}
+
 	@Override
 	public boolean evaluate(StateChangedEvent evt) {
-		// TODO Auto-generated method stub
-		return false;
+		if (oper.equals("EQ")) {
+			if (nodeState.equals(evt.newState)) {
+				return true;
+			} else {
+
+				return false;
+			}
+		} else {
+			if (nodeState.equals(evt.newState)) {
+				return false;
+			} else {
+				return true;
+			}
+
+		}
 	}
 
 }

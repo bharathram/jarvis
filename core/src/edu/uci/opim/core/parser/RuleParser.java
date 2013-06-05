@@ -239,10 +239,14 @@ public class RuleParser {
 			if ("state".equals(next.getNodeName())) {
 				SensorStatePredicate sensorStatePredicate = new SensorStatePredicate();
 				sensorStatePredicate.setHost(element.getAttribute("host"));
+				sensorStatePredicate.setOper(element.getAttribute("oper"));
 				sensorStatePredicate.setSensorClass(element
 						.getAttribute("class"));
 				sensorStatePredicate.setLocation(element
 						.getAttribute("location"));
+				sensorStatePredicate
+						.setNodeState(element.getElementsByTagName("state")
+								.item(0).getTextContent());
 				predicate = sensorStatePredicate;
 			} else if ("time".equals(next.getNodeName())) {
 				TimePredicate timepredicate = new TimePredicate();

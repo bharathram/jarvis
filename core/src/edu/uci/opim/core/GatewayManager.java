@@ -1,6 +1,5 @@
 package edu.uci.opim.core;
 
-import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,7 +27,7 @@ public class GatewayManager {
 	 * @param address
 	 * @return
 	 */
-	public synchronized String registerGateway(InetAddress address) {
+	public synchronized String registerGateway(String address) {
 		String key = "";
 		if (gatewayList.containsKey(key)) {
 			CoreManager.getLogManager().logEvent(

@@ -18,6 +18,7 @@ public abstract class SANode {
 	private NodeLocation location;
 	private String confPath;
 	private List<NodeState> states = new ArrayList<NodeState>();
+	private String module;
 	/**
 	 * Map to lookup human readable messages for sensor states.
 	 */
@@ -46,6 +47,15 @@ public abstract class SANode {
 
 	public String getName() {
 		return name;
+	}
+
+	public void setModule(String module) {
+		this.module = module;
+
+	}
+
+	public String getModule() {
+		return module;
 	}
 
 	public NodeClass[] getClasses() {
