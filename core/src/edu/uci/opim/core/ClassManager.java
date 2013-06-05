@@ -1,6 +1,7 @@
 package edu.uci.opim.core;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -104,7 +105,11 @@ public class ClassManager {
 	 * @return
 	 */
 	List<Rule> getRuleList(NodeClass nClass) {
-		return ruleGrid.get(nClass);
+		List<Rule> list = ruleGrid.get(nClass);
+		if (list == null) {
+			return Collections.EMPTY_LIST;
+		}
+		return list;
 
 	}
 

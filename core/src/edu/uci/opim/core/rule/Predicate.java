@@ -4,7 +4,7 @@ import edu.uci.opim.core.StateChangedEvent;
 
 public abstract class Predicate {
 	public static enum Operands {
-		AND, OR;
+		AND, OR, NOP;
 	};
 
 	public static Predicate.Operands getOperand(String oper) {
@@ -15,7 +15,7 @@ public abstract class Predicate {
 		return null;
 	}
 
-	private Operands chainedCondition;
+	private Operands chainedCondition = Operands.NOP;
 
 	public abstract boolean evaluate(StateChangedEvent evt);
 

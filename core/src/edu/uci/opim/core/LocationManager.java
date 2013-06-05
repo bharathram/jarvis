@@ -1,6 +1,7 @@
 package edu.uci.opim.core;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -119,7 +120,10 @@ public class LocationManager {
 	 * @return
 	 */
 	List<Rule> getRuleList(NodeLocation loc) {
-		return ruleGrid.get(loc);
-
+		List<Rule> list = ruleGrid.get(loc);
+		if (list == null) {
+			return Collections.EMPTY_LIST;
+		}
+		return list;
 	}
 }

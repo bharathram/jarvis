@@ -1,6 +1,7 @@
 package edu.uci.opim.core;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -131,6 +132,11 @@ public class NodeManager extends Observable {
 
 			}
 		} else {
+			if (node instanceof Sensor) {
+				createSensor(node.getName());
+			} else {
+				createActuator(node.getName());
+			}
 			synchronized (this) {
 				SANode saNode = knownNodeMap.get(node.getName());
 				saNode.setLocation(new NodeLocation(node.getLocation().string));
@@ -155,7 +161,9 @@ public class NodeManager extends Observable {
 									+ "new state" + newState, Priority.ERROR));
 			return;
 		}
-		if (!aliveNodes.containsKey(sensorName)) {
+
+		SANode s = knownNodeMap.get(sensorName);
+		if (!aliveNodes.containsKey(s)) {
 			CoreManager
 					.getLogManager()
 					.logEvent(
@@ -200,7 +208,11 @@ public class NodeManager extends Observable {
 	 * @return
 	 */
 	List<Rule> getRuleList(Sensor sensor) {
-		return ruleGrid.get(sensor);
+		List<Rule> list = ruleGrid.get(sensor);
+		if (list == null) {
+			return Collections.EMPTY_LIST;
+		}
+		return list;
 	}
 
 	public void constructEmail(Rule r) {
