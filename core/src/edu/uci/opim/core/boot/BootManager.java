@@ -4,11 +4,14 @@ import java.io.File;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.axis2.AxisFault;
+import org.apache.axis2.engine.AxisServer;
 import org.apache.log4j.Logger;
 
 import edu.uci.opim.core.CoreManager;
 import edu.uci.opim.core.parser.RuleParser;
 import edu.uci.opim.core.rule.Rule;
+import edu.uci.opim.core.web.CoreWebInterfaceImpl;
 import edu.uci.opim.node.NodeClass;
 import edu.uci.opim.node.NodeLocation;
 import edu.uci.opim.node.Sensor;
@@ -25,11 +28,19 @@ public class BootManager {
 
 	public void init() {
 
-		// TODO: Initialize and open the db connection
-		// TODO: Read rule conf and setup data structures
+		// Read rule conf and setup data structures
 		setupRuleSet();
 
-		// TODO: Start web services
+		// Start web services
+		AxisServer axisServer = new AxisServer();
+		try {
+			axisServer.deployService(CoreWebInterfaceImpl.class.getName());
+		} catch (AxisFault e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.out.println("Unable To Boot");
+		}
+
 		// TODO: Start php server
 
 	}

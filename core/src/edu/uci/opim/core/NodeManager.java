@@ -8,8 +8,12 @@ import java.util.Map.Entry;
 import java.util.Observable;
 import java.util.Set;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.AddressException;
+
 import org.apache.log4j.Logger;
 
+import edu.uci.jarvis.email.Email;
 import edu.uci.opim.core.exception.ExceptionToLog;
 import edu.uci.opim.core.exception.Priority;
 import edu.uci.opim.core.rule.Rule;
@@ -187,6 +191,30 @@ public class NodeManager extends Observable {
 	 */
 	List<Rule> getRuleList(Sensor sensor) {
 		return ruleGrid.get(sensor);
+	}
+
+	public void constructEmail(Rule r) {
+		StringBuilder msg = new StringBuilder();
+		msg.append("Time: " + System.currentTimeMillis() + "\n Rule:"
+				+ r.getName() + "\n");
+		for (Map.Entry<Sensor, NodeState> e : sysState.entrySet()) {
+			String sname = e.getKey().getName();
+			String state = e.getValue().string;
+			SANode san = knownNodeMap.get(sname);
+			GatewayNode gateway = aliveNodes.get(san);
+			msg.append(gateway.getGateKey() + ":" + sname + "->" + state);
+
+		}
+		Email e = new Email();
+		try {
+			e.sendEmail(msg.toString(), null);
+		} catch (AddressException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (MessagingException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 	}
 
 }
