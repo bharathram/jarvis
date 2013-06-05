@@ -47,7 +47,7 @@ public class Step {
 	}
 
 	public void setState(String state) {
-		this.state = new NodeState(host, state);
+		this.state = new NodeState(state);
 	}
 
 	public void execute() throws UnableToExecuteStepException {
