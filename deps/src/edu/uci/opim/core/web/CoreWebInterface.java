@@ -21,7 +21,7 @@ public interface CoreWebInterface {
 	 *         the session.
 	 * @throws AxisFault
 	 */
-	public String registerGateway(String ip, String key) throws AxisFault;
+	public String registerGateway(String key) throws AxisFault;
 
 	/**
 	 * @param gatewayId

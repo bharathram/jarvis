@@ -5,6 +5,7 @@ import javax.mail.MessagingException;
 import javax.mail.internet.AddressException;
 
 import org.apache.axis2.AxisFault;
+import org.apache.axis2.context.MessageContext;
 import org.apache.axis2.engine.AxisServer;
 
 import edu.uci.jarvis.email.Email;
@@ -24,10 +25,13 @@ public class CoreWebInterfaceImpl implements CoreWebInterface {
 	 * , java.lang.String)
 	 */
 	@Override
-	public String registerGateway(String ip, String key) {
+	public String registerGateway(String key) {
+		MessageContext inMessageContext = MessageContext
+				.getCurrentMessageContext();
+		String ip = (String) inMessageContext.getProperty("REMOTE_ADDR");
+
 		System.out.println("CoreWebInterfaceImpl.registerGateway() InetAddress"
 				+ ip + "Key:" + key);
-
 		return CoreManager.getGatewayManager().registerGateway(ip);
 	}
 

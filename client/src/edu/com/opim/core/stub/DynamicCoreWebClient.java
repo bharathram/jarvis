@@ -81,9 +81,9 @@ public class DynamicCoreWebClient implements CoreWebInterface {
 	}
 
 	@Override
-	public String registerGateway(String ip, String key) throws AxisFault {
+	public String registerGateway(String key) throws AxisFault {
 		Object[] result = dynamicClient.invokeBlocking(new QName(NAMESPACE,
-				"registerGateway"), new Object[] { ip, key },
+				"registerGateway"), new Object[] { key },
 				new Class[] { String.class });
 		if (result != null && result.length == 1 && result[0] instanceof String) {
 			return (String) result[0];
