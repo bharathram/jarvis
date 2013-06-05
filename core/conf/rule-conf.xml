@@ -28,7 +28,7 @@
 			<time gt="22:00" lte="06:00"/>
 		</condition>
 		<action>
-			<do host="RF01">EmailState</do>
+			<do host="AF01">EmailState</do>
 		</action>		
 	</rule>
 

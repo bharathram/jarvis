@@ -244,9 +244,7 @@ public class RuleParser {
 						.getAttribute("class"));
 				sensorStatePredicate.setLocation(element
 						.getAttribute("location"));
-				sensorStatePredicate
-						.setNodeState(element.getElementsByTagName("state")
-								.item(0).getTextContent());
+				sensorStatePredicate.setNodeState(element.getTextContent());
 				predicate = sensorStatePredicate;
 			} else if ("time".equals(next.getNodeName())) {
 				TimePredicate timepredicate = new TimePredicate();

@@ -22,6 +22,7 @@ public class Condition {
 		predicates = new ArrayList<Predicate>();
 		hostList = new ArrayList<Sensor>();
 		locList = new HashSet<NodeLocation>();
+		classList = new ArrayList<NodeClass>();
 	}
 
 	public boolean evaluate(StateChangedEvent event) {

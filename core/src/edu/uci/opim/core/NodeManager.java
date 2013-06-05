@@ -19,6 +19,7 @@ import edu.uci.opim.core.exception.Priority;
 import edu.uci.opim.core.rule.Rule;
 import edu.uci.opim.core.web.GatewayNode;
 import edu.uci.opim.node.Actuator;
+import edu.uci.opim.node.NodeLocation;
 import edu.uci.opim.node.NodeState;
 import edu.uci.opim.node.SANode;
 import edu.uci.opim.node.Sensor;
@@ -74,6 +75,11 @@ public class NodeManager extends Observable {
 			actuator = new Actuator();
 			actuator.setName(name);
 			knownNodeMap.put(name, actuator);
+		} else {
+			if (!(actuator instanceof Actuator)) {
+				throw new RuntimeException("Expected actuator node , found "
+						+ actuator.toString());
+			}
 		}
 		return (Actuator) actuator;
 	}
@@ -126,9 +132,13 @@ public class NodeManager extends Observable {
 			}
 		} else {
 			synchronized (this) {
+				SANode saNode = knownNodeMap.get(node.getName());
+				saNode.setLocation(new NodeLocation(node.getLocation().string));
+				CoreManager.getLocManager().registerNode(node);
 				aliveNodes.put(node, gateway);
 				if (node instanceof Sensor) {
 					sysState.put((Sensor) node, state);
+
 				}
 			}
 

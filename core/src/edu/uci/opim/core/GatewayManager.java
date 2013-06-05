@@ -36,6 +36,7 @@ public class GatewayManager {
 		} else {
 			GatewayNode gatewayNode = new GatewayNode(address);
 			key = gatewayNode.getGateKey();
+			gatewayList.put(key, gatewayNode);
 		}
 		return key;
 	}

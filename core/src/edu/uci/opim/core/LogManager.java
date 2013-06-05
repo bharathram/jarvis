@@ -49,27 +49,28 @@ public class LogManager {
 			Logger lgr = Logger.getLogger(ExceptionToLog.class.getName());
 			lgr.log(Level.SEVERE, ex.getMessage(), ex);
 
-		} finally {
-
-			try {
-				if (statement != null) {
-					statement.close();
-				}
-				if (con != null) {
-					con.close();
-				}
-
-			} catch (SQLException ex) {
-				Logger lgr = Logger.getLogger(ExceptionToLog.class.getName());
-				lgr.log(Level.SEVERE, ex.getMessage(), ex);
-			}
 		}
+		// finally {
+		//
+		// try {
+		// if (statement != null) {
+		// // statement.close();
+		// }
+		// if (con != null) {
+		// con.close();
+		// }
+		//
+		// } catch (SQLException ex) {
+		// Logger lgr = Logger.getLogger(ExceptionToLog.class.getName());
+		// lgr.log(Level.SEVERE, ex.getMessage(), ex);
+		// }
+		// }
 	}
 
 	public void logEvent(ExceptionToLog exp) {
 		// TODO Auto-generated constructor stub
 		// Log events to the DB
-
+		System.out.println(exp);
 		try {
 			statement
 					.executeUpdate("INSERT INTO eventlog(`Time`, `Message`, `Info`, `Priority`)"

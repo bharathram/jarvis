@@ -27,13 +27,14 @@ public class BootManager {
 	public static final Logger logger = Logger.getLogger(CoreManager.class);
 
 	public void init() {
-
-		// Read rule conf and setup data structures
-		setupRuleSet();
-
-		// Start web services
-		AxisServer axisServer = new AxisServer();
 		try {
+
+			// Read rule conf and setup data structures
+			setupRuleSet();
+
+			// Start web services
+			AxisServer axisServer = new AxisServer();
+
 			axisServer.deployService(CoreWebInterfaceImpl.class.getName());
 		} catch (AxisFault e) {
 			// TODO Auto-generated catch block
@@ -52,10 +53,16 @@ public class BootManager {
 			logger.fatal("Unable to read configuration file " + ruleConf);
 			System.exit(-1);
 		}
+		List<Rule> ruleSet = null;
 		// Parse XML file
-		RuleParser parser = new RuleParser(CoreConfig.RULE_CONF_PATH);
-		List<Rule> ruleSet = parser.parseBlackList();
-
+		try {
+			RuleParser parser = new RuleParser(CoreConfig.RULE_CONF_PATH);
+			ruleSet = parser.parseBlackList();
+		} catch (Exception e) {
+			System.out
+					.println("Error Parsing Configuration file Please check configuration file");
+			System.exit(-2);
+		}
 		// Populate index structures
 		for (Rule rule : ruleSet) {
 			// Map all sensors names to the rules that have them

@@ -1,10 +1,13 @@
 package edu.uci.opim.core.web;
 
 import javax.jws.WebService;
+import javax.mail.MessagingException;
+import javax.mail.internet.AddressException;
 
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.engine.AxisServer;
 
+import edu.uci.jarvis.email.Email;
 import edu.uci.opim.core.CoreManager;
 import edu.uci.opim.node.Actuator;
 import edu.uci.opim.node.NodeState;
@@ -101,6 +104,16 @@ public class CoreWebInterfaceImpl implements CoreWebInterface {
 		System.out.println("CoreWebInterfaceImpl.mail() gateway " + gatewayId
 				+ " message " + mesage);
 		// TODO Auto-generated method stub
+		Email e = new Email();
+		try {
+			e.sendEmail(mesage, null);
+		} catch (AddressException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (MessagingException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 
 	}
 

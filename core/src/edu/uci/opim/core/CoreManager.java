@@ -26,13 +26,10 @@ public class CoreManager {
 		nodeManager = new NodeManager();
 		bootManager = new BootManager();
 		gatewayManager = new GatewayManager();
+		eventLogger = new LogManager();
 		// Registerinf statechange listener
 		nodeManager.addObserver(new SensorStateChangeHandler());
 
-		// Perform the bootup tasks
-
-		bootManager.init();
-		bootManager.run();
 	}
 
 	public static CoreManager getInstance() {

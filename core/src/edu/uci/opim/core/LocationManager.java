@@ -77,23 +77,30 @@ public class LocationManager {
 	 * @param node
 	 */
 	public void registerNode(SANode node) {
-		String name = node.getLocation().string;
-		NodeLocation nodeLocation = map.get(name);
-		if (nodeLocation == null) {
-			CoreManager
-					.getLogManager()
-					.logEvent(
-							new ExceptionToLog(
-									"Node Location does not have any rule/Action associated with it",
-									name, Priority.WARN));
-			nodeLocation = createLocation(name);
+		if (node != null && node.getLocation() != null) {
+			String name = node.getLocation().string;
+			NodeLocation nodeLocation = map.get(name);
+			if (nodeLocation == null) {
+				CoreManager
+						.getLogManager()
+						.logEvent(
+								new ExceptionToLog(
+										"Node Location does not have any rule/Action associated with it",
+										name, Priority.WARN));
+				nodeLocation = createLocation(name);
+			}
+			List<SANode> list = locationGrid.get(nodeLocation);
+			if (list == null) {
+				list = new ArrayList<SANode>();
+				locationGrid.put(nodeLocation, list);
+			}
+			list.add(node);
+		} else {
+			CoreManager.getLogManager().logEvent(
+					new ExceptionToLog(
+							"Node does not have a location associated with it",
+							node, Priority.INFO));
 		}
-		List<SANode> list = locationGrid.get(nodeLocation);
-		if (list == null) {
-			list = new ArrayList<SANode>();
-			locationGrid.put(nodeLocation, list);
-		}
-		list.add(node);
 	}
 
 	public void deRegisterNode(SANode node) {
