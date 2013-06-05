@@ -98,6 +98,11 @@ public abstract class SANode {
 	}
 
 	@Override
+	public String toString() {
+		return "" + getClass() + "name:" + name + "location" + location + "]";
+	}
+
+	@Override
 	public int hashCode() {
 		return name.hashCode();
 	}
