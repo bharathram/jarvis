@@ -66,7 +66,7 @@ public class SensorStatePredicate extends Predicate {
 	@Override
 	public boolean evaluate(StateChangedEvent evt) {
 		if (oper.equals("EQ")) {
-			if (nodeState.equals(evt.newState)) {
+			if (evt.newState.equals(nodeState)) {
 				return true;
 			} else {
 
