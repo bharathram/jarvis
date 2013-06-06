@@ -4,76 +4,21 @@
 	<rule priority="1">
 		<name>The earth quake rule</name>
 		<condition>
-
-			<state host="ES01" oper="EQ">earthquake</state>
-			<and/>
-			<state class="earthquake" oper="EQ">earthquake</state>
-			<or/>
-			<state class="earthquake" location="lab1" oper="EQ">earthquake</state>
+		<state host="Earthquake" oper="EQ">Earthquake high</state>
 		</condition>
 		<action>		
-			<do host="AL02" >DEFCON1</do>
-			<do class="beeper" >BeepEmergency</do>
-			<do host="localhost">EmailState</do>
-			<do host="TS07">Monitor1Sec</do>
-			<do location="lab1" class="screen">GlowRed</do>			
+			<do host="Web cam" >TakePic</do>	
 		</action>
-	</rule>
-
-	<rule priority="5">
-		<name> Stdent working late</name>
-		<condition>
-			<state host="RF01" oper="EQ">StudentPresent</state>
-			<and/>
-			<time gt="22:00" lte="06:00"/>
-		</condition>
-		<action>
-			<do host="AF01">EmailState</do>
-		</action>		
-	</rule>
-
-	<rule priority="3">
-		<name> Stranger!!!</name>
-		<condition>
-			<time gt="22:00" lte="06:00"/>
-			<and/>
-			<br/>
-			<state location="lab1" class="lightsensor" oper="EQ">LightOn</state>
-			<or/>
-			<state location="lab1" class="soundsensor" oper="EQ">IHearYou</state>
-			<b/>
-		</condition>
-		<action>
-			<do host="labCam">TakePic</do>
-			<do location="lab1" class="beeper">IntruderAlert</do>
-		</action>		
-	</rule>
-<!-- This is not going to be supportted-->
-	<rule priority="2">
-		<name>Chaining rule</name>
-		<condition>
-			<state host="TS01" oper="EQ">Fire</state>
-		</condition>
-		<action>
-			<do host="SP01">TurnOn</do>
-			<do type="temperatureSensor">Monitor1Sec</do>
-		</action>
-	</rule>
-
+	</rule>	
 	<rule priority="1">
-		<name>Chaining rule ctd</name>
+		<name>The earth quake rule</name>
 		<condition>
-				
-			<state host="TS01" oper="EQ">Fire</state>
-			<and/>
-			<prev host="TS01" oper="EQ">Fire</prev>			
+		<state host="Earthquake" oper="EQ">Earthquake Low</state>
 		</condition>
-		<action>
-			<do host="SP01">TurnOn</do>
+		<action>		
+			<do host="Buzzer" >BeepEmergency</do>	
 		</action>
-	</rule>
-
-	
+	</rule>	
 </blacklist>
 <whitelist>something
 </whitelist>
