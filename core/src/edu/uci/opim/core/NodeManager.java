@@ -95,7 +95,7 @@ public class NodeManager extends Observable {
 
 	public Actuator getActuator(String name) {
 		SANode saNode = knownNodeMap.get(name);
-		if (saNode instanceof Sensor) {
+		if (saNode instanceof Actuator) {
 			return (Actuator) saNode;
 		}
 		return null;

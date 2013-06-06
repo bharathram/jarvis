@@ -1,10 +1,15 @@
 package edu.uci.opim.core;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.axis2.AxisFault;
+
+import edu.uci.opim.client.stub.DynamicGatewayClient;
 import edu.uci.opim.core.action.Step;
 import edu.uci.opim.core.exception.ExceptionToLog;
 import edu.uci.opim.core.exception.Priority;
@@ -113,25 +118,25 @@ public class GatewayManager {
 					}
 				}
 			}
-			// Apply the step to each of the identified nodes
-			String msg = "";
-			for (SANode saNode : actuators) {
-				if (CoreManager.getNodeManager().getGatewayNode(saNode) != null) {
-					execute(saNode, step);
-				} else {
-					msg += saNode.toString() + " , ";
-				}
+		}
+		// Apply the step to each of the identified nodes
+		String msg = "";
+		for (SANode saNode : actuators) {
+			if (CoreManager.getNodeManager().getGatewayNode(saNode) != null) {
+				execute(saNode, step);
+			} else {
+				msg += saNode.toString() + " , ";
 			}
-			if (!"".equals(msg)) {
-				throw new UnableToExecuteStepException(step,
-						"Unable to connect to " + msg);
-			}
+		}
+		if (!"".equals(msg)) {
+			throw new UnableToExecuteStepException(step,
+					"Unable to connect to " + msg);
 		}
 	}
 
 	private void execute(SANode node, Step step)
 			throws UnableToExecuteStepException {
-
+		System.out.println("GatewayManager.execute()");
 		if (node == null) {
 			throw new UnableToExecuteStepException(step,
 					"Unknown node. This should not happen ");
@@ -144,8 +149,21 @@ public class GatewayManager {
 					"Unable to connect to target node");
 		}
 		// TODO:
-		// Invoke the gateway stub and call
-		// actionOnNode(String node, NodeState newState,Object parameter);
+
+		try {
+			DynamicGatewayClient clientStub = new DynamicGatewayClient(new URL(
+					"http://" + gatewayNode.ip
+							+ ":6060/axis2/services/GatewayService?wsdl"));
+
+			clientStub.actionOnNode(node.getName(), step.getState(), "");
+
+		} catch (AxisFault e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 	}
 }
