@@ -36,15 +36,15 @@ public class StringWrapper implements Serializable {
 	@Override
 	public boolean equals(Object obj) {
 		String o;
-		if (!(obj instanceof StringWrapper)) {
+		if (obj instanceof StringWrapper) {
+			o = ((StringWrapper) obj).string;
+		} else if (obj instanceof String) {
 			o = (String) obj;
 		} else {
-			o = (String) obj.toString();
-		}
-		if (string.equals(o))
-			return true;
-		else
 			return false;
+		}
+
+		return string.equals(o);
 
 	}
 
