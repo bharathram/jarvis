@@ -5,6 +5,7 @@ import java.net.URL;
 import javax.xml.namespace.QName;
 
 import org.apache.axis2.AxisFault;
+import org.apache.axis2.client.async.AxisCallback;
 import org.apache.axis2.rpc.client.RPCServiceClient;
 
 import edu.com.opim.gateway.web.GatewayWebInterface;
@@ -24,17 +25,12 @@ public class DynamicGatewayClient implements GatewayWebInterface {
 	@Override
 	public Boolean actionOnNode(String node, NodeState newState,
 			Object parameter) throws AxisFault {
+		AxisCallback callback = null;
+		System.out.println("DynamicGatewayClient.actionOnNode() " + node
+				+ newState + parameter);
+		dynamicClient.invokeNonBlocking(new QName(NAMESPACE, "actionOnNode"),
+				new Object[] { node, newState, parameter }, callback);
 
-		Object[] result = dynamicClient.invokeBlocking(new QName(NAMESPACE,
-				"actionOnNode"), new Object[] { node, newState, parameter },
-				new Class[] { Boolean.class });
-
-		if (result != null && result.length == 1
-				&& result[0] instanceof Boolean) {
-			return (Boolean) result[0];
-
-		}
-		return false;
+		return true;
 	}
-
 }
