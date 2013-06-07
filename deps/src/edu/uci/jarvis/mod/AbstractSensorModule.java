@@ -33,10 +33,17 @@ public class AbstractSensorModule extends Observable implements SensorModule {
 		deleteObserver(o);
 	}
 
-	protected void notify(NodeState n) {
+	protected void notify(final NodeState n) {
 		System.out.println("SensorSimMod.notify()" + n);
 		setChanged();
-		notifyObservers(n);
+		new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				notifyObservers(n);
+				
+			}
+		}).start();
 	}
 
 }
