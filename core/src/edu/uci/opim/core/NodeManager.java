@@ -111,7 +111,7 @@ public class NodeManager extends Observable {
 	}
 
 	public void addRule(Sensor sensor, Rule rule) {
-		List<Rule> ruleList = ruleGrid.get(sensor.getName());
+		List<Rule> ruleList = ruleGrid.get(sensor);
 		if (ruleList == null) {
 			ruleList = new ArrayList<Rule>();
 			ruleGrid.put(sensor, ruleList);
@@ -137,22 +137,21 @@ public class NodeManager extends Observable {
 			} else {
 				createActuator(node.getName());
 			}
+			SANode saNode = knownNodeMap.get(node.getName());
+			saNode.setLocation(new NodeLocation(node.getLocation().string));
+			CoreManager.getLocManager().registerNode(node);
 			synchronized (this) {
-				SANode saNode = knownNodeMap.get(node.getName());
-				saNode.setLocation(new NodeLocation(node.getLocation().string));
-				CoreManager.getLocManager().registerNode(node);
 				aliveNodes.put(node, gateway);
 				if (node instanceof Sensor) {
 					sysState.put((Sensor) node, state);
-
 				}
 			}
 
 		}
 	}
 
-	public void handleStimulus(String gatewayId, String sensorName,
-			NodeState newState) {
+	public void handleStimulus(String gatewayId, final String sensorName,
+			final NodeState newState) {
 		if (!CoreManager.getGatewayManager().checkGateway(gatewayId)) {
 			CoreManager.getLogManager().logEvent(
 					new ExceptionToLog(
@@ -175,7 +174,7 @@ public class NodeManager extends Observable {
 			return;
 
 		}
-		SANode saNode = knownNodeMap.get(sensorName);
+		final SANode saNode = knownNodeMap.get(sensorName);
 		if (!(saNode instanceof Sensor)) {
 			CoreManager
 					.getLogManager()
@@ -190,15 +189,24 @@ public class NodeManager extends Observable {
 
 		// Incase of deadlocks see here......
 		Set<Entry<Sensor, NodeState>> entrySet;
-		NodeState oldState;
-		synchronized (this) {
-			oldState = sysState.get(saNode);
-			sysState.put((Sensor) saNode, newState);
-			setChanged();
-			entrySet = sysState.entrySet();
+		final NodeState oldState = sysState.get(saNode);
+		if (!oldState.equals(newState)) {
+			synchronized (saNode) {
+				sysState.put((Sensor) saNode, newState);
+				setChanged();
+				entrySet = sysState.entrySet();
+			}
+			// To reduce the call back time process event in a different thread
+			new Thread(new Runnable() {
+
+				@Override
+				public void run() {
+					notifyObservers(new StateChangedEvent((Sensor) saNode,
+							oldState, newState));
+
+				}
+			}).start();
 		}
-		notifyObservers(new StateChangedEvent((Sensor) saNode, oldState,
-				newState));
 	}
 
 	/**
