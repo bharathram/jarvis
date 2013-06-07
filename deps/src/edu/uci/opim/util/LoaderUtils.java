@@ -18,15 +18,14 @@ public class LoaderUtils {
 		// Should not be invoked this is a Utility class
 	}
 
-	private static PluginManager pm = PluginManagerFactory
-			.createPluginManager();
-
 	public static ActuatorModule getActuatorModule(String jarPath) {
+		PluginManager pm = PluginManagerFactory.createPluginManager();
 		pm.addPluginsFrom(new File(jarPath).toURI());
 		return pm.getPlugin(ActuatorModule.class);
 	}
 
 	public static SensorModule getSensorModule(String jarPath) {
+		PluginManager pm = PluginManagerFactory.createPluginManager();
 		File file = new File(jarPath);
 		System.out.println("Attempting to load file at " + file.getPath());
 		pm.addPluginsFrom(file.toURI());
