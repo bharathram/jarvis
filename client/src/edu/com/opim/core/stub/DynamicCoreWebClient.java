@@ -28,53 +28,6 @@ public class DynamicCoreWebClient implements CoreWebInterface {
 	private final RPCServiceClient dynamicClient;
 	private boolean[] lock = new boolean[1];
 
-	private AxisCallback callBack = new AxisCallback() {
-
-		@Override
-		public void onMessage(MessageContext arg0) {
-			synchronized (lock) {
-				lock[0] = true;
-			}
-		}
-
-		@Override
-		public void onFault(MessageContext arg0) {
-			// Nothing to do
-
-		}
-
-		@Override
-		public void onError(Exception arg0) {
-			// Nothing to do
-		}
-
-		@Override
-		public void onComplete() {
-			synchronized (lock) {
-				lock.notifyAll();
-			}
-		}
-
-	};
-
-	private void waitForCallBack() throws AxisFault {
-		synchronized (lock) {
-			if (!lock[0]) {
-				try {
-					System.out.println("Waiting for callback");
-					lock.wait();
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		}
-		if (!lock[0]) {
-			throw new AxisFault("Error executing Async RPC");
-		}
-		lock[0] = false;
-	}
-
 	public DynamicCoreWebClient(URL wsdlUrl) throws AxisFault {
 		dynamicClient = new RPCServiceClient(null, wsdlUrl, new QName(
 				NAMESPACE, SERVICE_NAME), SERVICE_ENDPOINT);
@@ -98,7 +51,8 @@ public class DynamicCoreWebClient implements CoreWebInterface {
 		// dynamicClient.invokeBlocking(new QName(NAMESPACE, "registerSensor"),
 		// new Object[] { gatewayId, sensor, initialState });
 		dynamicClient.invokeNonBlocking(new QName(NAMESPACE, "registerSensor"),
-				new Object[] { gatewayId, sensor, initialState }, callBack);
+				new Object[] { gatewayId, sensor, initialState },
+				new MyCallBack());
 		// waitForCallBack();
 
 	}
@@ -108,14 +62,14 @@ public class DynamicCoreWebClient implements CoreWebInterface {
 			throws AxisFault {
 		dynamicClient.invokeNonBlocking(
 				new QName(NAMESPACE, "registerActuator"), new Object[] {
-						gatewayId, actuator }, callBack);
+						gatewayId, actuator }, new MyCallBack());
 		// waitForCallBack();
 	}
 
 	@Override
 	public void heartbeat(String gatewayId) throws AxisFault {
 		dynamicClient.invokeNonBlocking(new QName(NAMESPACE, "heartbeat"),
-				new Object[] { gatewayId }, callBack);
+				new Object[] { gatewayId }, new MyCallBack());
 		// waitForCallBack();
 	}
 
@@ -123,15 +77,39 @@ public class DynamicCoreWebClient implements CoreWebInterface {
 	public void stimulus(String gatewayId, String sensorName, NodeState newState)
 			throws AxisFault {
 		dynamicClient.invokeNonBlocking(new QName(NAMESPACE, "stimulus"),
-				new Object[] { gatewayId, sensorName, newState }, callBack);
+				new Object[] { gatewayId, sensorName, newState },
+				new MyCallBack());
 		// waitForCallBack();
 	}
 
 	@Override
 	public void mail(String gatewayId, String mesage) throws AxisFault {
 		dynamicClient.invokeNonBlocking(new QName(NAMESPACE, "mail"),
-				new Object[] { gatewayId, mesage }, callBack);
+				new Object[] { gatewayId, mesage }, new MyCallBack());
 		// waitForCallBack();
 	}
 
+	public static class MyCallBack implements AxisCallback {
+
+		@Override
+		public void onMessage(MessageContext arg0) {
+
+		}
+
+		@Override
+		public void onFault(MessageContext arg0) {
+			// Nothing to do
+
+		}
+
+		@Override
+		public void onError(Exception arg0) {
+			// Nothing to do
+		}
+
+		@Override
+		public void onComplete() {
+		}
+
+	}
 }

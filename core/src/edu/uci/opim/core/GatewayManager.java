@@ -32,7 +32,7 @@ public class GatewayManager {
 	 * @param address
 	 * @return
 	 */
-	public synchronized String registerGateway(String address) {
+	public String registerGateway(String address) {
 		String key = "";
 		if (gatewayList.containsKey(key)) {
 			CoreManager.getLogManager().logEvent(
@@ -41,7 +41,9 @@ public class GatewayManager {
 		} else {
 			GatewayNode gatewayNode = new GatewayNode(address);
 			key = gatewayNode.getGateKey();
-			gatewayList.put(key, gatewayNode);
+			synchronized (gatewayList) {
+				gatewayList.put(key, gatewayNode);
+			}
 		}
 		return key;
 	}
@@ -57,8 +59,7 @@ public class GatewayManager {
 		}
 	}
 
-	public synchronized void registerNode(SANode node, String gateway,
-			NodeState initalState) {
+	public void registerNode(SANode node, String gateway, NodeState initalState) {
 		if (gatewayList.containsKey(gateway)) {
 			// Register the node with the node manager
 			CoreManager.getNodeManager().registerNode(node,
