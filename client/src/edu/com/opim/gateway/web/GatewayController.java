@@ -61,11 +61,10 @@ public class GatewayController implements GatewayInterface {
 	}
 
 	public boolean action(String node, Object state) {
-		if (ActuatorMap.containsKey(node)) {
-			// Actuator ac = ActuatorMap.get(node);
 
+		if (actModuleMap.containsKey(node)) {
 			ActuatorModule am = actModuleMap.get(node);
-			am.update(this, state);
+			am.update(this, state.toString());
 		}
 		return true;
 	}

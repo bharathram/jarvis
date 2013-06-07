@@ -30,8 +30,7 @@ public class SoundPlayerModule implements ActuatorModule {
 
 	public static SoundPlayer getEmergency() {
 		if (emergency == null) {
-			emergency = new SoundPlayer(SoundPlayerModule.class.getResource(
-					"sound1.mp3").getFile());
+			emergency = new SoundPlayer("./plugins/res/sound1.mp3");
 		}
 		return emergency;
 
@@ -39,8 +38,7 @@ public class SoundPlayerModule implements ActuatorModule {
 
 	public static SoundPlayer getIntruder() {
 		if (intruder == null) {
-			intruder = new SoundPlayer(SoundPlayerModule.class.getResource(
-					"sound2.mp3").getFile());
+			intruder = new SoundPlayer("./plugins/res/sound2.mp3");
 		}
 		return intruder;
 
