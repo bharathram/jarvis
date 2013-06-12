@@ -22,10 +22,7 @@ public class GatewayBootManager {
 			System.exit(-1);
 		}
 
-		// Publish web service
 		try {
-			AxisServer axisServer = ServerUtils.getServer();
-			axisServer.deployService(GatewayWebInterfaceImpl.class.getName());
 
 			// Do service discovery
 			while (!testConnection()) {
@@ -36,6 +33,9 @@ public class GatewayBootManager {
 			// Checkin with the core
 			GatewayController.getInstance().register(GatewayConfig.WSDL);
 			GatewayController.getInstance().registerNodes();
+			// Publish web service
+			AxisServer axisServer = ServerUtils.getServer();
+			axisServer.deployService(GatewayWebInterfaceImpl.class.getName());
 		} catch (AxisFault e) {
 			System.out.println("FATAL Error while starting web service ");
 			System.exit(-2);

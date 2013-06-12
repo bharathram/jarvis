@@ -2,6 +2,8 @@ package edu.com.opim.gateway.web;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,6 +12,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import org.apache.axis2.AxisFault;
+import org.apache.commons.codec.binary.Base64;
 
 import edu.com.opim.client.parser.SensorParser;
 import edu.com.opim.core.stub.DynamicCoreWebClient;
@@ -165,13 +168,19 @@ public class GatewayController implements GatewayInterface {
 	}
 
 	public void register(String wsdl) throws AxisFault, MalformedURLException {
-		URL wUrl = new URL(wsdl);
-		coreStub = new DynamicCoreWebClient(wUrl);
-		// TODO: Secure key exchange
-		String key = "";
-
-		gatewayId = coreStub.registerGateway(key);
-		startHeartBeat();
+		MessageDigest md;
+		String hashKey = "";
+		try {
+			md = MessageDigest.getInstance("MD5");
+			byte[] key = md.digest(GatewayConfig.KEY.getBytes());
+			hashKey = new String(Base64.encodeBase64(key));
+			URL wUrl = new URL(wsdl);
+			coreStub = new DynamicCoreWebClient(wUrl);
+			gatewayId = coreStub.registerGateway(hashKey);
+			startHeartBeat();
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void registerNodes() {
@@ -182,7 +191,6 @@ public class GatewayController implements GatewayInterface {
 							new NodeState(""));
 				} else {
 					coreStub.registerActuator(gatewayId, (Actuator) node);
-
 				}
 			} catch (AxisFault e) {
 				e.printStackTrace();

@@ -32,7 +32,7 @@ public class CoreWebInterfaceImpl implements CoreWebInterface {
 
 		System.out.println("CoreWebInterfaceImpl.registerGateway() InetAddress"
 				+ ip + "Key:" + key);
-		return CoreManager.getGatewayManager().registerGateway(ip);
+		return CoreManager.getGatewayManager().registerGateway(key, ip);
 	}
 
 	/*
@@ -89,12 +89,14 @@ public class CoreWebInterfaceImpl implements CoreWebInterface {
 	 */
 	@Override
 	public void stimulus(String gatewayId, String sensorName, NodeState newState) {
+
 		System.out.println("CoreWebInterfaceImpl.stimulus() gateway "
 				+ gatewayId + " Sensotr name " + sensorName + " news state "
 				+ newState);
 
 		CoreManager.getNodeManager().handleStimulus(gatewayId, sensorName,
 				newState);
+		System.out.println("CoreWebInterfaceImpl.stimulus()------END");
 	}
 
 	/*
