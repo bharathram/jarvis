@@ -39,7 +39,7 @@ public class CoreWebInterfaceImpl implements CoreWebInterface {
 
 		System.out.println("CoreWebInterfaceImpl.registerGateway() InetAddress"
 				+ ip + "Key:" + key);
-		return CoreManager.getGatewayManager().registerGateway(ip);
+		return CoreManager.getGatewayManager().registerGateway(key, ip);
 	}
 
 	/*
