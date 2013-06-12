@@ -16,12 +16,13 @@ public class WebCam {
 			String cmd = cmd1 + prefix + cmd2;
 			proc = rt.exec(cmd);
 			proc.waitFor();
-			File file = new File("webCamOut");
+			String pathname = "webCamOut";
+			File file = new File(pathname);
 			if (file.isDirectory()) {
 				String[] list = file.list();
 				for (String string : list) {
 					if (string.startsWith(prefix)) {
-						return string;
+						return pathname + "/" + string;
 					}
 				}
 			}

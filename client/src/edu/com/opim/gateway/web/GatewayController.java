@@ -1,5 +1,6 @@
 package edu.com.opim.gateway.web;
 
+import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.MessageDigest;
@@ -11,11 +12,14 @@ import java.util.Observable;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import javax.mail.MessagingException;
+
 import org.apache.axis2.AxisFault;
 import org.apache.commons.codec.binary.Base64;
 
 import edu.com.opim.client.parser.SensorParser;
 import edu.com.opim.core.stub.DynamicCoreWebClient;
+import edu.uci.jarvis.email.Email;
 import edu.uci.jarvis.mod.AbstractSensorModule;
 import edu.uci.jarvis.mod.ActuatorModule;
 import edu.uci.jarvis.mod.GatewayInterface;
@@ -67,7 +71,19 @@ public class GatewayController implements GatewayInterface {
 
 		if (actModuleMap.containsKey(node)) {
 			ActuatorModule am = actModuleMap.get(node);
-			am.update(this, state.toString());
+			Object res = am.update(this, state.toString());
+			Email e = new Email();
+			try {
+				if (res instanceof String) {
+					e.sendEmail("Message From " + node + "\n" + res, null);
+				} else if (res instanceof File) {
+					System.out.println("GatewayController.action()");
+					e.sendEmail("Message from " + node,
+							new String[] { ((File) res).getAbsolutePath() });
+				}
+			} catch (MessagingException e1) {
+				e1.printStackTrace();
+			}
 		}
 		return true;
 	}
