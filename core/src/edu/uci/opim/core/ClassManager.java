@@ -10,6 +10,7 @@ import org.apache.log4j.Logger;
 
 import edu.uci.opim.core.exception.ExceptionToLog;
 import edu.uci.opim.core.exception.Priority;
+import edu.uci.opim.core.rule.Condition;
 import edu.uci.opim.core.rule.Rule;
 import edu.uci.opim.node.NodeClass;
 import edu.uci.opim.node.SANode;
@@ -35,6 +36,8 @@ public class ClassManager {
 	 * Mapping of the class to the rules that are associated with them
 	 */
 	private Map<NodeClass, List<Rule>> ruleGrid = new HashMap<NodeClass, List<Rule>>();
+
+	private Map<NodeClass, List<Condition>> conditionGrid = new HashMap<NodeClass, List<Condition>>();
 
 	ClassManager() {
 	}
@@ -87,6 +90,15 @@ public class ClassManager {
 			ruleGrid.put(nClass, ruleList);
 		}
 		ruleList.add(rule);
+	}
+
+	public void addWhiteListRule(NodeClass nClass, Condition condition) {
+		List<Condition> conditionList = conditionGrid.get(nClass.string);
+		if (conditionList == null) {
+			conditionList = new ArrayList<Condition>();
+			conditionGrid.put(nClass, conditionList);
+		}
+		conditionList.add(condition);
 	}
 
 	public void deRegisterNode(String node) {

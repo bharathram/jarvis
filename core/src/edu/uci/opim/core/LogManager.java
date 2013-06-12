@@ -35,8 +35,8 @@ public class LogManager {
 		Connection con = null;
 
 		String url = "jdbc:mysql://localhost";
-		String user = "testuser";
-		String password = "test623";
+		String user = "root";
+		String password = "";
 
 		try {
 

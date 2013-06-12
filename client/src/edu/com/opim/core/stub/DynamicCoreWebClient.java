@@ -83,6 +83,12 @@ public class DynamicCoreWebClient implements CoreWebInterface {
 	}
 
 	@Override
+	public void exception(String key, String xmlrule) throws AxisFault {
+		dynamicClient.invokeNonBlocking(new QName(NAMESPACE, "exception"),
+				new Object[] { key, xmlrule }, new MyCallBack());
+	}
+
+	@Override
 	public void mail(String gatewayId, String mesage) throws AxisFault {
 		dynamicClient.invokeNonBlocking(new QName(NAMESPACE, "mail"),
 				new Object[] { gatewayId, mesage }, new MyCallBack());

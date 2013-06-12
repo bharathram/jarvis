@@ -17,6 +17,7 @@ import org.apache.log4j.Logger;
 import edu.uci.jarvis.email.Email;
 import edu.uci.opim.core.exception.ExceptionToLog;
 import edu.uci.opim.core.exception.Priority;
+import edu.uci.opim.core.rule.Condition;
 import edu.uci.opim.core.rule.Rule;
 import edu.uci.opim.core.web.GatewayNode;
 import edu.uci.opim.node.Actuator;
@@ -37,6 +38,8 @@ public class NodeManager extends Observable {
 	 * Maps the sensor to the rules that it is associated with
 	 */
 	private Map<Sensor, List<Rule>> ruleGrid = new HashMap<Sensor, List<Rule>>();
+
+	private Map<Sensor, List<Condition>> conditionGrid = new HashMap<Sensor, List<Condition>>();
 
 	/**
 	 * Map of all known nodes.(Nodes that have atleast one rule associated with
@@ -117,6 +120,15 @@ public class NodeManager extends Observable {
 			ruleGrid.put(sensor, ruleList);
 		}
 		ruleList.add(rule);
+	}
+
+	public void addWhiteListRule(Sensor sensor, Condition condition) {
+		List<Condition> conditionList = conditionGrid.get(sensor);
+		if (conditionList == null) {
+			conditionList = new ArrayList<Condition>();
+			conditionGrid.put(sensor, conditionList);
+		}
+		conditionList.add(condition);
 	}
 
 	public void registerNode(SANode node, GatewayNode gateway, NodeState state) {
