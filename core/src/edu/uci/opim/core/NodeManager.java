@@ -150,6 +150,13 @@ public class NodeManager extends Observable {
 		}
 	}
 
+	public void deRegisterNode(List<GatewayNode> deadList) {
+		for (Entry<SANode, GatewayNode> entry : aliveNodes.entrySet()) {
+			if (deadList.contains(entry.getValue()))
+				aliveNodes.remove(entry.getKey());
+		}
+	}
+
 	public void handleStimulus(String gatewayId, final String sensorName,
 			final NodeState newState) {
 		if (!CoreManager.getGatewayManager().checkGateway(gatewayId)) {
