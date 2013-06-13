@@ -3,9 +3,9 @@ package edu.uci.opim.core;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Observable;
 
 import javax.mail.MessagingException;
@@ -162,10 +162,14 @@ public class NodeManager extends Observable {
 	}
 
 	public void deRegisterNode(List<GatewayNode> deadList) {
-		for (Entry<SANode, GatewayNode> entry : aliveNodes.entrySet()) {
-			if (deadList.contains(entry.getValue()))
-				aliveNodes.remove(entry.getKey());
+		Iterator it = aliveNodes.entrySet().iterator();
+		while (it.hasNext()) {
+			Map.Entry pairs = (Map.Entry) it.next();
+			if (deadList.contains(pairs.getValue())) {
+				it.remove();
+			}
 		}
+
 	}
 
 	public void handleStimulus(String gatewayId, final String sensorName,

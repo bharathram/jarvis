@@ -203,9 +203,11 @@ public class GatewayController implements GatewayInterface {
 					}
 
 				} catch (AxisFault e) {
+					isConnected = false;
 					System.out.println("[ERROR] Server not reachable :");
 
 				} catch (MalformedURLException e) {
+					isConnected = false;
 					System.out.println("[ERROR] Malformed URL  :"
 							+ e.getMessage());
 				}
