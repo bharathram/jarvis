@@ -48,7 +48,10 @@ public class GatewayController implements GatewayInterface {
 	private DynamicCoreWebClient coreStub;
 	private String gatewayId;
 	public GatewayConfig config;
-
+	/**
+	 * Keeps track connectivity status
+	 */
+	private boolean isConnected = false;
 	/**
 	 * List of all the nodes connected to this gateway
 	 */
@@ -187,10 +190,25 @@ public class GatewayController implements GatewayInterface {
 
 		@Override
 		public void run() {
-			try {
-				coreStub.heartbeat(gatewayId);
-			} catch (AxisFault e) {
-				System.out.println("[ERROR] Server not reachable :");
+			synchronized (this) {
+				try {
+					if (isConnected) {
+						coreStub.heartbeat(gatewayId);
+					} else {
+						System.out
+								.println("[INFO]Attempting to restore connection ");
+						register();
+						registerNodes();
+
+					}
+
+				} catch (AxisFault e) {
+					System.out.println("[ERROR] Server not reachable :");
+
+				} catch (MalformedURLException e) {
+					System.out.println("[ERROR] Malformed URL  :"
+							+ e.getMessage());
+				}
 			}
 
 		}
@@ -207,6 +225,7 @@ public class GatewayController implements GatewayInterface {
 			coreStub = new DynamicCoreWebClient(wUrl);
 			gatewayId = coreStub.registerGateway(hashKey);
 			startHeartBeat();
+			isConnected = true;
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 		}
