@@ -14,23 +14,25 @@ import edu.uci.jarvis.mod.AbstractSensorModule;
 import edu.uci.opim.node.NodeState;
 
 public class SensorSimMod extends AbstractSensorModule {
-	final Applet ap;
+	final Applets ap;
 
 	String SensorName = "";
 	String[] SensorStates;
+	String prevState;
 
 	public SensorSimMod(String name, String[] states) {
 		// TODO Auto-generated constructor stub
 
 		this.SensorName = name;
 		SensorStates = states;
+		prevState = states[0];
 		ap = new Applets();
 
 		// gui = new Thread(new Runnable() {
 
 		// @Override
 		// public void run() {
-		final JFrame frame = new JFrame();
+		final JFrame frame = AppletManager.getFrame();
 		frame.getContentPane().add(ap);
 		ap.init();
 		frame.setSize(ap.getSize());
@@ -39,26 +41,37 @@ public class SensorSimMod extends AbstractSensorModule {
 		frame.setVisible(true);
 	}
 
+	public void timeTrigger() {
+		notify(new NodeState(prevState));
+	}
+
+	public void updateLabel(String label) {
+		ap.monitor.setText("Monitoring :" + label);
+		ap.monitor.repaint();
+	}
+
 	// });
 	// gui.start();
 	// }
 
 	class Applets extends Applet implements ActionListener {
+
 		@Override
 		public void init() {
 			setBounds(0, 0, 350, 250);
 			setBackground(Color.gray);
 			System.out.println("SensorSimMod.Applets.init()");
 			Button state;
-			Label label1 = new Label("Sensor Name:");
+			Label label1 = new Label("Sensor Name: " + SensorName);
 
 			label1.setVisible(true);
-			Label label2 = new Label(SensorName);
+			monitor = new Label("Monitoring:");
+			monitor.setVisible(true);
 
 			Label label3 = new Label("States:");
 
 			add(label1);
-			add(label2);
+			add(monitor);
 			add(label3);
 			for (String name : SensorStates) {
 				state = new Button(name);
@@ -70,11 +83,13 @@ public class SensorSimMod extends AbstractSensorModule {
 		public void actionPerformed(ActionEvent e) {
 			if (e.getSource() instanceof Button) {
 				Button state = (Button) e.getSource();
-				SensorSimMod.this.notify(new NodeState(state.getLabel()));
+				prevState = state.getLabel();
+				SensorSimMod.this.notify(new NodeState(prevState));
 			}
 		}
 
 		TextField textField1, textField2;
+		Label monitor;
 
 	}
 
