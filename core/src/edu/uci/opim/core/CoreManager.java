@@ -35,7 +35,7 @@ public class CoreManager {
 			classManager = new ClassManager();
 			nodeManager = new NodeManager();
 			gatewayManager = new GatewayManager();
-			eventLogger = new LogManager();
+			eventLogger = new LogManager(config);
 			// Registerinf statechange listener
 			nodeManager.addObserver(new SensorStateChangeHandler());
 		} catch (Exception e) {
