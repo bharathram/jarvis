@@ -198,9 +198,12 @@ public class NodeManager extends Observable {
 											+ newState, Priority.WARN));
 			return;
 		}
-
+		CoreManager.getLogManager().logEvent(
+				new ExceptionToLog("Received Stimulus ", gatewayId
+						+ " Sensor name" + sensorName + "new state" + newState,
+						Priority.INFO));
 		// Incase of deadlocks see here......
-		Set<Entry<Sensor, NodeState>> entrySet;
+		final Set<Entry<Sensor, NodeState>> entrySet;
 		final NodeState oldState = sysState.get(saNode);
 		if (!oldState.equals(newState)) {
 			synchronized (saNode) {
@@ -214,7 +217,7 @@ public class NodeManager extends Observable {
 				@Override
 				public void run() {
 					notifyObservers(new StateChangedEvent((Sensor) saNode,
-							oldState, newState));
+							oldState, newState, entrySet));
 
 				}
 			}).start();
