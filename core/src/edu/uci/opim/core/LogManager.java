@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import edu.uci.opim.core.boot.CoreConfig;
 import edu.uci.opim.core.exception.ExceptionToLog;
 
 /**
@@ -23,7 +24,7 @@ public class LogManager {
 	private static SimpleDateFormat sqld = new SimpleDateFormat(
 			"yyyy-MM-dd HH:mm:ss");
 
-	LogManager() {
+	LogManager(CoreConfig c) {
 		// TODO Auto-generated constructor stub
 
 		// Connect to DB from config file
@@ -34,9 +35,9 @@ public class LogManager {
 
 		Connection con = null;
 
-		String url = CoreManager.getInstance().config.DB_URL;
-		String user = CoreManager.getInstance().config.DB_USERNAME;
-		String password = CoreManager.getInstance().config.DB_PWD;
+		String url = c.DB_URL;
+		String user = c.DB_USERNAME;
+		String password = c.DB_PWD;
 
 		try {
 
