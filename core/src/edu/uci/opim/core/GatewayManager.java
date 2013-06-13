@@ -5,6 +5,7 @@ import java.net.URL;
 import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Timer;
@@ -213,10 +214,14 @@ public class GatewayManager {
 		public void run() {
 			// TODO Auto-generated method stub
 			List<GatewayNode> deadList = new ArrayList<GatewayNode>();
-			for (Map.Entry<String, GatewayNode> entry : gatewayList.entrySet()) {
-				if (!entry.getValue().isAlive()) {
-					gatewayList.remove(entry.getKey());
-					deadList.add(entry.getValue());
+			Iterator it = gatewayList.entrySet().iterator();
+			while (it.hasNext()) {
+				Map.Entry<String, GatewayNode> pairs = (Map.Entry<String, GatewayNode>) it
+						.next();
+
+				if (!pairs.getValue().isAlive()) {
+					it.remove();
+					deadList.add(pairs.getValue());
 
 				}
 			}
