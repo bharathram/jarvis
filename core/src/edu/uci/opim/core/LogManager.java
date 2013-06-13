@@ -34,9 +34,9 @@ public class LogManager {
 
 		Connection con = null;
 
-		String url = "jdbc:mysql://localhost";
-		String user = "testuser";
-		String password = "test623";
+		String url = CoreManager.getInstance().config.DB_URL;
+		String user = CoreManager.getInstance().config.DB_USERNAME;
+		String password = CoreManager.getInstance().config.DB_PWD;
 
 		try {
 
@@ -50,21 +50,6 @@ public class LogManager {
 			lgr.log(Level.SEVERE, ex.getMessage(), ex);
 
 		}
-		// finally {
-		//
-		// try {
-		// if (statement != null) {
-		// // statement.close();
-		// }
-		// if (con != null) {
-		// con.close();
-		// }
-		//
-		// } catch (SQLException ex) {
-		// Logger lgr = Logger.getLogger(ExceptionToLog.class.getName());
-		// lgr.log(Level.SEVERE, ex.getMessage(), ex);
-		// }
-		// }
 	}
 
 	public void logEvent(ExceptionToLog exp) {

@@ -23,5 +23,22 @@
 		<state id="Earthquake Low">Mild tremor</state>
 		<ws-path>./plugins/seismic.jar</ws-path>
 	</sensor>
+	<sensor id="PHO1">
+		<name>Light Sensor</name>
+		<class>photonic</class>
+		<location>lab</location>
+		<state id="Light on">Lights are on</state>
+		<state id="Light off">Lights are off</state>
+		<ws-path>./plugins/light.jar</ws-path>
+	</sensor>
+	<sensor id="TMP1">
+		<name>Temperature Sensor</name>
+		<class>thermal</class>
+		<location>lab</location>
+		<state id="Temperature warm">Its warm</state>
+		<state id="Temperature hot">Its hot</state>
+		<state id="Temperature cold">Its cold</state>
+		<ws-path>./plugins/temp.jar</ws-path>
+	</sensor>
 		
 </configuration> 

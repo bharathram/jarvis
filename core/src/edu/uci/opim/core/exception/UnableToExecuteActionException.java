@@ -6,6 +6,10 @@ import java.util.List;
 
 public class UnableToExecuteActionException extends Exception implements
 		Iterable<UnableToExecuteStepException> {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1289853408794972836L;
 	private List<UnableToExecuteStepException> list = new ArrayList<UnableToExecuteStepException>();
 
 	public void add(UnableToExecuteStepException exception) {

@@ -2,6 +2,7 @@ package edu.uci.opim.core;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -10,6 +11,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import org.apache.axis2.AxisFault;
+import org.apache.axis2.context.MessageContext;
+import org.apache.commons.codec.binary.Base64;
 
 import edu.uci.opim.client.stub.DynamicGatewayClient;
 import edu.uci.opim.core.action.Step;
@@ -36,20 +39,38 @@ public class GatewayManager {
 	 * @param address
 	 * @return
 	 */
-	public String registerGateway(String address) {
-		String key = "";
-		if (gatewayList.containsKey(key)) {
-			CoreManager.getLogManager().logEvent(
-					new ExceptionToLog("Gateway Already exists: ", address,
-							Priority.ERROR));
-		} else {
-			GatewayNode gatewayNode = new GatewayNode(address);
-			key = gatewayNode.getGateKey();
-			synchronized (gatewayList) {
-				gatewayList.put(key, gatewayNode);
+	public String registerGateway(String pass, String address) {
+		try {
+			MessageDigest md = MessageDigest.getInstance("MD5");
+			byte[] secret = md.digest(CoreManager.getInstance().config.key
+					.getBytes());
+			String hashKey = new String(Base64.encodeBase64(secret));
+			if (hashKey.equals(pass)) {
+				String key = new String(md.digest(address.getBytes()));
+				if (gatewayList.containsKey(key)) {
+					CoreManager.getLogManager().logEvent(
+							new ExceptionToLog("Gateway Already exists: ",
+									address, Priority.ERROR));
+				} else {
+					GatewayNode gatewayNode = new GatewayNode(address);
+					key = gatewayNode.getGateKey();
+					synchronized (gatewayList) {
+						gatewayList.put(key, gatewayNode);
+					}
+				}
+				return key;
 			}
+			CoreManager.getLogManager().logEvent(
+					new ExceptionToLog("Gateway Authentication faile", "Key:"
+							+ pass + " IP: " + address, Priority.ERROR));
+		} catch (Exception e) {
+			e.printStackTrace();
+			CoreManager.getLogManager().logEvent(
+					new ExceptionToLog(
+							"Eception occured while registering gateway", e,
+							Priority.ERROR));
 		}
-		return key;
+		return "";
 	}
 
 	public GatewayManager() {
@@ -59,9 +80,9 @@ public class GatewayManager {
 	}
 
 	public void checkIn(String gateway) {
-		GatewayNode gatewayNode = gatewayList.get(gateway);
-		if (gatewayNode != null) {
-			gatewayNode.checkIn();
+
+		if (checkGateway(gateway)) {
+			gatewayList.get(gateway).checkIn();
 		} else {
 			CoreManager.getLogManager().logEvent(
 					new ExceptionToLog("Check in from unknown gateway: ",
@@ -70,7 +91,7 @@ public class GatewayManager {
 	}
 
 	public void registerNode(SANode node, String gateway, NodeState initalState) {
-		if (gatewayList.containsKey(gateway)) {
+		if (checkGateway(gateway)) {
 			// Register the node with the node manager
 			CoreManager.getNodeManager().registerNode(node,
 					gatewayList.get(gateway), initalState);
@@ -90,7 +111,15 @@ public class GatewayManager {
 	}
 
 	public boolean checkGateway(String gatewayId) {
-		return gatewayList.containsKey(gatewayId);
+		if (gatewayList.containsKey(gatewayId)) {
+			MessageContext inMessageContext = MessageContext
+					.getCurrentMessageContext();
+			String ip = (String) inMessageContext.getProperty("REMOTE_ADDR");
+			if (ip.equals(gatewayList.get(gatewayId).ip)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**

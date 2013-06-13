@@ -1,5 +1,8 @@
 package edu.uci.opim.core.web;
 
+import java.util.List;
+import java.util.Set;
+
 import javax.jws.WebService;
 import javax.mail.MessagingException;
 import javax.mail.internet.AddressException;
@@ -10,7 +13,11 @@ import org.apache.axis2.engine.AxisServer;
 
 import edu.uci.jarvis.email.Email;
 import edu.uci.opim.core.CoreManager;
+import edu.uci.opim.core.parser.RuleParser;
+import edu.uci.opim.core.rule.Condition;
 import edu.uci.opim.node.Actuator;
+import edu.uci.opim.node.NodeClass;
+import edu.uci.opim.node.NodeLocation;
 import edu.uci.opim.node.NodeState;
 import edu.uci.opim.node.Sensor;
 
@@ -32,7 +39,7 @@ public class CoreWebInterfaceImpl implements CoreWebInterface {
 
 		System.out.println("CoreWebInterfaceImpl.registerGateway() InetAddress"
 				+ ip + "Key:" + key);
-		return CoreManager.getGatewayManager().registerGateway(ip);
+		return CoreManager.getGatewayManager().registerGateway(key, ip);
 	}
 
 	/*
@@ -95,6 +102,44 @@ public class CoreWebInterfaceImpl implements CoreWebInterface {
 
 		CoreManager.getNodeManager().handleStimulus(gatewayId, sensorName,
 				newState);
+	}
+
+	@Override
+	public void exception(String key, String xmlrule) throws AxisFault {
+
+		List<Condition> whiteRuleSet = null;
+		// Parse XML file
+		try {
+			RuleParser parser = new RuleParser("");
+			whiteRuleSet = parser.parseWhiteList(xmlrule);
+
+		} catch (Exception e) {
+			System.out.println("Error Parsing white rule");
+			System.exit(-2);
+		}
+		// Populate index structures
+		for (Condition condition : whiteRuleSet) {
+			// Map all sensors names to the rules that have them
+			List<Sensor> dependentSensors = condition.getHostList();
+			for (Sensor sensor : dependentSensors) {
+				CoreManager.getNodeManager()
+						.addWhiteListRule(sensor, condition);
+			}
+			// Map all node classes to the the rules that have them
+			List<NodeClass> dependentClasses = condition.getClassList();
+			for (NodeClass nodeClass : dependentClasses) {
+				CoreManager.getClassManager().addWhiteListRule(nodeClass,
+						condition);
+			}
+			// Map all the locations to rules that have them
+			Set<NodeLocation> dependentLocations = condition.getLocList();
+			for (NodeLocation nodeLocation : dependentLocations) {
+				CoreManager.getLocManager().addWhiteListRule(nodeLocation,
+						condition);
+			}
+		}
+		;
+
 	}
 
 	/*

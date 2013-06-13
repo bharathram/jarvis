@@ -5,13 +5,13 @@ import java.util.Timer;
 
 import edu.uci.opim.core.boot.CoreConfig;
 
-/**
+/*
  * Class models the gateway node at the controller site.
  * 
  * @author bram
  * 
  */
-public class GatewayNode implements CoreConfig {
+public class GatewayNode {
 	public final String ip;
 	public final String gateKey;
 	private long checkin;
@@ -36,11 +36,11 @@ public class GatewayNode implements CoreConfig {
 	}
 
 	public boolean isAlive() {
-		if (checkin < System.currentTimeMillis() - 3 * HEART_BEAT)
+		if (checkin < System.currentTimeMillis() - 3 * CoreConfig.HEART_BEAT) {
 			return false;
-		else
+		} else {
 			return true;
-
+		}
 	}
 
 	/**

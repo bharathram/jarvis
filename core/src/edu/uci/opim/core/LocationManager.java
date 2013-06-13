@@ -10,6 +10,7 @@ import org.apache.log4j.Logger;
 
 import edu.uci.opim.core.exception.ExceptionToLog;
 import edu.uci.opim.core.exception.Priority;
+import edu.uci.opim.core.rule.Condition;
 import edu.uci.opim.core.rule.Rule;
 import edu.uci.opim.node.NodeLocation;
 import edu.uci.opim.node.SANode;
@@ -32,6 +33,9 @@ public class LocationManager {
 	 * Maps locations to the rules associated with it.
 	 */
 	private Map<NodeLocation, List<Rule>> ruleGrid = new HashMap<NodeLocation, List<Rule>>();
+
+	private Map<NodeLocation, List<Condition>> conditionGrid = new HashMap<NodeLocation, List<Condition>>();
+
 	/**
 	 * Maps the location to the nodes available at that location.
 	 */
@@ -70,6 +74,15 @@ public class LocationManager {
 			ruleGrid.put(location, ruleList);
 		}
 		ruleList.add(rule);
+	}
+
+	public void addWhiteListRule(NodeLocation location, Condition condition) {
+		List<Condition> conditionList = conditionGrid.get(location.string);
+		if (conditionList == null) {
+			conditionList = new ArrayList<Condition>();
+			conditionGrid.put(location, conditionList);
+		}
+		conditionList.add(condition);
 	}
 
 	/**
@@ -122,7 +135,15 @@ public class LocationManager {
 	List<Rule> getRuleList(NodeLocation loc) {
 		List<Rule> list = ruleGrid.get(loc);
 		if (list == null) {
-			return Collections.EMPTY_LIST;
+			return Collections.emptyList();
+		}
+		return list;
+	}
+
+	List<Condition> getWhiteRuleList(NodeLocation loc) {
+		List<Condition> list = conditionGrid.get(loc);
+		if (list == null) {
+			return Collections.emptyList();
 		}
 		return list;
 	}

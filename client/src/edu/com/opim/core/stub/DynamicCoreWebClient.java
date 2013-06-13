@@ -26,7 +26,8 @@ public class DynamicCoreWebClient implements CoreWebInterface {
 	private static final String SERVICE_NAME = "CosmossService";
 	private static final String SERVICE_ENDPOINT = "CosmossServiceHttpSoap12Endpoint";
 	private final RPCServiceClient dynamicClient;
-	private boolean[] lock = new boolean[1];
+
+	// private boolean[] lock = new boolean[1];
 
 	public DynamicCoreWebClient(URL wsdlUrl) throws AxisFault {
 		dynamicClient = new RPCServiceClient(null, wsdlUrl, new QName(
@@ -80,6 +81,12 @@ public class DynamicCoreWebClient implements CoreWebInterface {
 				new Object[] { gatewayId, sensorName, newState },
 				new MyCallBack());
 		// waitForCallBack();
+	}
+
+	@Override
+	public void exception(String key, String xmlrule) throws AxisFault {
+		dynamicClient.invokeNonBlocking(new QName(NAMESPACE, "exception"),
+				new Object[] { key, xmlrule }, new MyCallBack());
 	}
 
 	@Override

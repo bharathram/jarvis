@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Observable;
-import java.util.Set;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.AddressException;
@@ -17,6 +16,7 @@ import org.apache.log4j.Logger;
 import edu.uci.jarvis.email.Email;
 import edu.uci.opim.core.exception.ExceptionToLog;
 import edu.uci.opim.core.exception.Priority;
+import edu.uci.opim.core.rule.Condition;
 import edu.uci.opim.core.rule.Rule;
 import edu.uci.opim.core.web.GatewayNode;
 import edu.uci.opim.node.Actuator;
@@ -37,6 +37,8 @@ public class NodeManager extends Observable {
 	 * Maps the sensor to the rules that it is associated with
 	 */
 	private Map<Sensor, List<Rule>> ruleGrid = new HashMap<Sensor, List<Rule>>();
+
+	private Map<Sensor, List<Condition>> conditionGrid = new HashMap<Sensor, List<Condition>>();
 
 	/**
 	 * Map of all known nodes.(Nodes that have atleast one rule associated with
@@ -119,6 +121,15 @@ public class NodeManager extends Observable {
 		ruleList.add(rule);
 	}
 
+	public void addWhiteListRule(Sensor sensor, Condition condition) {
+		List<Condition> conditionList = conditionGrid.get(sensor);
+		if (conditionList == null) {
+			conditionList = new ArrayList<Condition>();
+			conditionGrid.put(sensor, conditionList);
+		}
+		conditionList.add(condition);
+	}
+
 	public void registerNode(SANode node, GatewayNode gateway, NodeState state) {
 		if (!knownNodeMap.containsKey(node.getName())) {
 			if (node instanceof Sensor) {
@@ -193,15 +204,18 @@ public class NodeManager extends Observable {
 											+ newState, Priority.WARN));
 			return;
 		}
-
+		CoreManager.getLogManager().logEvent(
+				new ExceptionToLog("Received Stimulus ", gatewayId
+						+ " Sensor name" + sensorName + "new state" + newState,
+						Priority.INFO));
 		// Incase of deadlocks see here......
-		Set<Entry<Sensor, NodeState>> entrySet;
+		final Map<Sensor, NodeState> entrySet;
 		final NodeState oldState = sysState.get(saNode);
 		if (!oldState.equals(newState)) {
 			synchronized (saNode) {
 				sysState.put((Sensor) saNode, newState);
 				setChanged();
-				entrySet = sysState.entrySet();
+				entrySet = new HashMap<>(sysState);
 			}
 			// To reduce the call back time process event in a different thread
 			new Thread(new Runnable() {
@@ -209,7 +223,7 @@ public class NodeManager extends Observable {
 				@Override
 				public void run() {
 					notifyObservers(new StateChangedEvent((Sensor) saNode,
-							oldState, newState));
+							oldState, newState, entrySet));
 
 				}
 			}).start();
@@ -225,7 +239,15 @@ public class NodeManager extends Observable {
 	List<Rule> getRuleList(Sensor sensor) {
 		List<Rule> list = ruleGrid.get(sensor);
 		if (list == null) {
-			return Collections.EMPTY_LIST;
+			return Collections.emptyList();
+		}
+		return list;
+	}
+
+	List<Condition> getWhiteRuleList(Sensor sensor) {
+		List<Condition> list = conditionGrid.get(sensor);
+		if (list == null) {
+			return Collections.emptyList();
 		}
 		return list;
 	}

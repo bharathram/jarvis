@@ -1,9 +1,10 @@
 package edu.uci.jarvis.test;
 
 import java.util.Timer;
+import java.util.TimerTask;
 
 public class FrequencyMod {
-	Integer frequency;
+	long frequency;
 	Timer timer;
 	private static FrequencyMod instance = null;
 
@@ -23,17 +24,27 @@ public class FrequencyMod {
 		return instance;
 	}
 
-	public void setFrequency(Integer frequency) {
+	public void setFrequency(long frequency) {
 		System.out.println("FrequencyMod.setFrequency()" + frequency);
 		this.frequency = frequency;
 		timer.cancel();
 		timer = new Timer();
-		timer.schedule(new Task(), firstTime, frequency);
+		timer.schedule(new NotificationTask(), frequency, frequency);
 	}
 
-	public Integer getFrequency() {
+	public long getFrequency() {
 		System.out.println("FrequencyMod.getFrequency()" + frequency);
 		return frequency;
+	}
+
+	static class NotificationTask extends TimerTask {
+
+		@Override
+		public void run() {
+			// TODO Auto-generated method stub
+
+		}
+
 	}
 
 }

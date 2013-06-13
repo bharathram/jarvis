@@ -19,8 +19,6 @@ public class SensorSimMod extends AbstractSensorModule {
 	String SensorName = "";
 	String[] SensorStates;
 
-	private Thread gui;
-
 	public SensorSimMod(String name, String[] states) {
 		// TODO Auto-generated constructor stub
 

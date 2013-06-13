@@ -1,6 +1,8 @@
 package edu.uci.opim.core.parser;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -72,6 +74,49 @@ public class RuleParser {
 		return nodes;
 	}
 
+	public List<Condition> parseWhiteList(String str) {
+		List<Condition> nodes = new ArrayList<Condition>();
+
+		try {
+
+			InputStream is = new ByteArrayInputStream(str.getBytes());
+
+			DocumentBuilderFactory dbFactory = DocumentBuilderFactory
+					.newInstance();
+			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+			Document doc = dBuilder.parse(is);
+
+			// optional, but recommended
+			// read this -
+			// http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
+			doc.getDocumentElement().normalize();
+
+			System.out.println("Root element :"
+					+ doc.getDocumentElement().getNodeName());
+
+			NodeList conditionNodeList = doc.getElementsByTagName("condition");
+			// NodeList conditionNodeList = ((Element) ruleNodeList)
+			// .getElementsByTagName("condition");
+
+			for (int i = 0; i < conditionNodeList.getLength(); i++) {
+				System.out.println("----------------------------");
+				System.out.println("nList:" + conditionNodeList.getLength());
+
+				Node conditionNode = conditionNodeList.item(i);
+
+				Condition createCondition = createCondition(conditionNode);
+				nodes.add(createCondition);
+
+				System.out.println("\nCurrent Element :"
+						+ conditionNode.getNodeName());
+
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return nodes;
+	}
+
 	private Rule createRule(Node ruleNode) {
 		Rule rule = null;
 		if (ruleNode.getNodeType() == Node.ELEMENT_NODE) {
@@ -98,86 +143,6 @@ public class RuleParser {
 			rule.setAction(action);
 		}
 		return rule;
-
-		// for (int j = 0; j < nList1.getLength(); j++) {
-		// System.out.println("nList1:" + nList1.getLength());
-		// Node nNode1 = nList1.item(j);
-		// if (nNode1.getNodeType() == Node.ELEMENT_NODE) {
-		// Element eElement1 = (Element) nNode1;
-		//
-		// System.out.println("Priority : "
-		// + eElement1.getAttribute("priority"));
-		// System.out.println("Name : "
-		// + eElement1.getElementsByTagName("name").item(0)
-		// .getTextContent());
-		// for (int k = 0; k < nList2.getLength(); k++) {
-		// System.out.println("nList2:" + nList2.getLength());
-		// Node nNode2 = nList2.item(k);
-		// if (nNode2.getNodeType() == Node.ELEMENT_NODE) {
-		// System.out.println("\nCurrent Element2 :"
-		// + nNode2.getNodeName());
-		// for (int l = 0; l < nList3.getLength(); l++) {
-		//
-		// Node nNode3 = nList3.item(l);
-		// if (nNode3.getNodeType() == Node.ELEMENT_NODE) {
-		// Element eElement3 = (Element) nNode3;
-		// System.out.println("\nCurrent Element3 :"
-		// + nNode3.getNodeName());
-		// System.out.println("host : "
-		// + eElement3.getAttribute("host"));
-		// System.out.println("oper : "
-		// + eElement3.getAttribute("oper"));
-		// System.out.println("class : "
-		// + eElement3.getAttribute("class"));
-		// System.out.println("oper : "
-		// + eElement3.getAttribute("oper"));
-		// System.out.println("class : "
-		// + eElement3.getAttribute("class"));
-		// System.out.println("location : "
-		// + eElement3
-		// .getAttribute("location"));
-		// System.out.println("Name : "
-		// + eElement3.getTextContent());
-		// }
-		// }
-		//
-		// }
-		//
-		// }
-		// // System.out.println("action : "
-		// // + eElement1.getElementsByTagName("action")
-		// // .item(0).getTextContent());
-		// for (int m = 0; m < nList1.getLength(); m++) {
-		// Node nNode4 = nList4.item(m);
-		// if (nNode4.getNodeType() == Node.ELEMENT_NODE) {
-		// Element eElement4 = (Element) nNode4;
-		// for (int n = 0; n < nList5.getLength(); n++) {
-		//
-		// Node nNode5 = nList5.item(n);
-		// if (nNode5.getNodeType() == Node.ELEMENT_NODE) {
-		// Element eElement5 = (Element) nNode5;
-		// System.out.println("\nCurrent Element3 :"
-		// + nNode5.getNodeName());
-		// System.out.println("host : "
-		// + eElement5.getAttribute("host"));
-		// System.out.println("class : "
-		// + eElement5.getAttribute("class"));
-		// System.out.println("host : "
-		// + eElement5.getAttribute("host"));
-		// System.out.println("host : "
-		// + eElement5.getAttribute("host"));
-		// System.out.println("location : "
-		// + eElement5
-		// .getAttribute("location"));
-		// System.out.println("Name : "
-		// + eElement5.getTextContent());
-		// }
-		// }
-		// }
-		// }
-		// }
-		// }
-		// }
 	}
 
 	private Action createAction(Node actionNode) {
@@ -215,7 +180,7 @@ public class RuleParser {
 			Predicate.Operands oper = null;
 			while (next != null) {
 				if (next.getNodeType() != Node.TEXT_NODE) {
-					System.out.println("RuleParser.createRule()");
+					System.out.println("RuleParser.createCondition()");
 					String nodeName = next.getNodeName();
 					System.out.println(nodeName);
 					if (isConditionalOperator(nodeName)) {
@@ -268,8 +233,9 @@ public class RuleParser {
 	}
 
 	public static void main(String argv[]) {
-		RuleParser par = new RuleParser("rule-conf1.xml");
+		RuleParser par = new RuleParser("");
 		par.parseBlackList();
+		par.parseWhiteList("<condition> <state host=\"RF01\" oper=\"EQ\">StudentPresent</state> <and/> <time gt=\"22:00\" lte=\"06:00\"/> </condition>");
 
 	}
 }

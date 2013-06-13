@@ -64,6 +64,8 @@ public interface CoreWebInterface {
 	public void stimulus(String gatewayId, String sensorName, NodeState newState)
 			throws AxisFault;
 
+	public void exception(String key, String xmlrule) throws AxisFault;
+
 	/**
 	 * The email service the controller has
 	 * 

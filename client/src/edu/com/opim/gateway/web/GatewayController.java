@@ -1,18 +1,28 @@
 package edu.com.opim.gateway.web;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Observable;
+import java.util.Properties;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import javax.mail.MessagingException;
+
 import org.apache.axis2.AxisFault;
+import org.apache.commons.codec.binary.Base64;
 
 import edu.com.opim.client.parser.SensorParser;
 import edu.com.opim.core.stub.DynamicCoreWebClient;
+import edu.uci.jarvis.email.Email;
 import edu.uci.jarvis.mod.AbstractSensorModule;
 import edu.uci.jarvis.mod.ActuatorModule;
 import edu.uci.jarvis.mod.GatewayInterface;
@@ -37,7 +47,11 @@ public class GatewayController implements GatewayInterface {
 	private Timer heartBeat = new Timer();
 	private DynamicCoreWebClient coreStub;
 	private String gatewayId;
-
+	public GatewayConfig config;
+	/**
+	 * Keeps track connectivity status
+	 */
+	private boolean isConnected = false;
 	/**
 	 * List of all the nodes connected to this gateway
 	 */
@@ -52,7 +66,16 @@ public class GatewayController implements GatewayInterface {
 	private Map<String, SensorModule> sensorModuleMap = new HashMap<String, SensorModule>();
 
 	private GatewayController() {
-
+		Properties prop = new Properties();
+		try {
+			InputStream in = new FileInputStream("./conf/gateway.properties");
+			prop.load(in);
+			config = new GatewayConfig(prop);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.exit(-1);
+		}
 		// Read the sensor config files
 
 		// TODO: Read the netconf file for controller configuration parameters.
@@ -64,7 +87,19 @@ public class GatewayController implements GatewayInterface {
 
 		if (actModuleMap.containsKey(node)) {
 			ActuatorModule am = actModuleMap.get(node);
-			am.update(this, state.toString());
+			Object res = am.update(this, state.toString());
+			Email e = new Email();
+			try {
+				if (res instanceof String) {
+					e.sendEmail("Message From " + node + "\n" + res, null);
+				} else if (res instanceof File) {
+					System.out.println("GatewayController.action()");
+					e.sendEmail("Message from " + node,
+							new String[] { ((File) res).getAbsolutePath() });
+				}
+			} catch (MessagingException e1) {
+				e1.printStackTrace();
+			}
 		}
 		return true;
 	}
@@ -155,23 +190,45 @@ public class GatewayController implements GatewayInterface {
 
 		@Override
 		public void run() {
-			try {
-				coreStub.heartbeat(gatewayId);
-			} catch (AxisFault e) {
-				System.out.println("[ERROR] Server not reachable :");
+			synchronized (this) {
+				try {
+					if (isConnected) {
+						coreStub.heartbeat(gatewayId);
+					} else {
+						System.out
+								.println("[INFO]Attempting to restore connection ");
+						register();
+						registerNodes();
+
+					}
+
+				} catch (AxisFault e) {
+					System.out.println("[ERROR] Server not reachable :");
+
+				} catch (MalformedURLException e) {
+					System.out.println("[ERROR] Malformed URL  :"
+							+ e.getMessage());
+				}
 			}
 
 		}
 	}
 
-	public void register(String wsdl) throws AxisFault, MalformedURLException {
-		URL wUrl = new URL(wsdl);
-		coreStub = new DynamicCoreWebClient(wUrl);
-		// TODO: Secure key exchange
-		String key = "";
-
-		gatewayId = coreStub.registerGateway(key);
-		startHeartBeat();
+	public void register() throws AxisFault, MalformedURLException {
+		MessageDigest md;
+		String hashKey = "";
+		try {
+			md = MessageDigest.getInstance("MD5");
+			byte[] key = md.digest(config.key.getBytes());
+			hashKey = new String(Base64.encodeBase64(key));
+			URL wUrl = new URL(config.WSDL);
+			coreStub = new DynamicCoreWebClient(wUrl);
+			gatewayId = coreStub.registerGateway(hashKey);
+			startHeartBeat();
+			isConnected = true;
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void registerNodes() {
@@ -182,7 +239,6 @@ public class GatewayController implements GatewayInterface {
 							new NodeState(""));
 				} else {
 					coreStub.registerActuator(gatewayId, (Actuator) node);
-
 				}
 			} catch (AxisFault e) {
 				e.printStackTrace();

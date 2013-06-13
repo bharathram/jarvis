@@ -1,7 +1,9 @@
 package edu.uci.jarvis.temperature;
 
+import net.xeoh.plugins.base.annotations.PluginImplementation;
 import edu.uci.jarvis.applet.SensorSimMod;
 
+@PluginImplementation
 public class TemperatureSensor extends SensorSimMod {
 
 	/**
@@ -9,14 +11,7 @@ public class TemperatureSensor extends SensorSimMod {
 	 */
 
 	public TemperatureSensor() {
-		// TODO Auto-generated constructor stub
 		super("Temperature Sensor", new String[] { "Temperature warm",
 				"Temperature hot", "Temperature cold" });
 	}
-
-	public static void main(String[] args) {
-		TemperatureSensor sen = new TemperatureSensor();
-
-	}
-
 }
