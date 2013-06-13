@@ -1,6 +1,8 @@
 package edu.com.opim.gateway.web;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.MessageDigest;
@@ -9,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Observable;
+import java.util.Properties;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -44,6 +47,7 @@ public class GatewayController implements GatewayInterface {
 	private Timer heartBeat = new Timer();
 	private DynamicCoreWebClient coreStub;
 	private String gatewayId;
+	public GatewayConfig config;
 
 	/**
 	 * List of all the nodes connected to this gateway
@@ -59,7 +63,16 @@ public class GatewayController implements GatewayInterface {
 	private Map<String, SensorModule> sensorModuleMap = new HashMap<String, SensorModule>();
 
 	private GatewayController() {
-
+		Properties prop = new Properties();
+		try {
+			InputStream in = new FileInputStream("./conf/gateway.properties");
+			prop.load(in);
+			config = new GatewayConfig(prop);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.exit(-1);
+		}
 		// Read the sensor config files
 
 		// TODO: Read the netconf file for controller configuration parameters.
@@ -183,14 +196,14 @@ public class GatewayController implements GatewayInterface {
 		}
 	}
 
-	public void register(String wsdl) throws AxisFault, MalformedURLException {
+	public void register() throws AxisFault, MalformedURLException {
 		MessageDigest md;
 		String hashKey = "";
 		try {
 			md = MessageDigest.getInstance("MD5");
-			byte[] key = md.digest(GatewayConfig.KEY.getBytes());
+			byte[] key = md.digest(config.key.getBytes());
 			hashKey = new String(Base64.encodeBase64(key));
-			URL wUrl = new URL(wsdl);
+			URL wUrl = new URL(config.WSDL);
 			coreStub = new DynamicCoreWebClient(wUrl);
 			gatewayId = coreStub.registerGateway(hashKey);
 			startHeartBeat();

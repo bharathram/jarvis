@@ -12,6 +12,7 @@ import edu.com.opim.gateway.web.GatewayWebInterfaceImpl;
 import edu.com.opim.gateway.web.ServerUtils;
 
 public class GatewayBootManager {
+
 	public void init() {
 		try {
 			GatewayController.getInstance().init();
@@ -31,7 +32,7 @@ public class GatewayBootManager {
 				Thread.sleep(1000 * 60);
 			}
 			// Checkin with the core
-			GatewayController.getInstance().register(GatewayConfig.WSDL);
+			GatewayController.getInstance().register();
 			GatewayController.getInstance().registerNodes();
 			// Publish web service
 			AxisServer axisServer = ServerUtils.getServer();
@@ -54,8 +55,9 @@ public class GatewayBootManager {
 		Socket socket = null;
 		boolean reachable = false;
 		try {
-			socket = new Socket(GatewayConfig.HOST_NAME,
-					GatewayConfig.HOST_PORT);
+			socket = new Socket(
+					GatewayController.getInstance().config.HOST_NAME,
+					GatewayController.getInstance().config.HOST_PORT);
 			reachable = true;
 		} catch (IOException e) {
 
