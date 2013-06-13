@@ -4,6 +4,8 @@ import edu.uci.opim.core.CoreManager;
 import edu.uci.opim.core.StateChangedEvent;
 import edu.uci.opim.node.NodeClass;
 import edu.uci.opim.node.NodeLocation;
+import edu.uci.opim.node.NodeState;
+import edu.uci.opim.node.Sensor;
 
 /**
  * 
@@ -65,21 +67,22 @@ public class SensorStatePredicate extends Predicate {
 
 	@Override
 	public boolean evaluate(StateChangedEvent evt) {
-		if (oper.equals("EQ")) {
-			if (evt.newState.equals(nodeState)) {
-				return true;
-			} else {
-
-				return false;
+		Sensor sensor = CoreManager.getNodeManager().getSensor(host);
+		boolean eval = false;
+		if (evt.sysState.containsKey(sensor)) {
+			NodeState curState = evt.sysState.get(sensor);
+			if (curState != null) {
+				if ("EQ".equals(oper)) {
+					if (curState.equals(nodeState)) {
+						eval = true;
+					}
+				} else {
+					if (!curState.equals(evt.newState)) {
+						eval = true;
+					}
+				}
 			}
-		} else {
-			if (nodeState.equals(evt.newState)) {
-				return false;
-			} else {
-				return true;
-			}
-
 		}
+		return eval;
 	}
-
 }

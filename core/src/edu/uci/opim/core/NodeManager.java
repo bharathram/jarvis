@@ -5,9 +5,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Observable;
-import java.util.Set;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.AddressException;
@@ -203,13 +201,13 @@ public class NodeManager extends Observable {
 						+ " Sensor name" + sensorName + "new state" + newState,
 						Priority.INFO));
 		// Incase of deadlocks see here......
-		final Set<Entry<Sensor, NodeState>> entrySet;
+		final Map<Sensor, NodeState> entrySet;
 		final NodeState oldState = sysState.get(saNode);
 		if (!oldState.equals(newState)) {
 			synchronized (saNode) {
 				sysState.put((Sensor) saNode, newState);
 				setChanged();
-				entrySet = sysState.entrySet();
+				entrySet = new HashMap<>(sysState);
 			}
 			// To reduce the call back time process event in a different thread
 			new Thread(new Runnable() {
