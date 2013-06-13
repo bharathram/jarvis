@@ -139,4 +139,12 @@ public class LocationManager {
 		}
 		return list;
 	}
+
+	List<Condition> getWhiteRuleList(NodeLocation loc) {
+		List<Condition> list = conditionGrid.get(loc);
+		if (list == null) {
+			return Collections.EMPTY_LIST;
+		}
+		return list;
+	}
 }

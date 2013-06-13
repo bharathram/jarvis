@@ -125,6 +125,15 @@ public class ClassManager {
 
 	}
 
+	List<Condition> getWhiteRuleList(NodeClass nClass) {
+		List<Condition> list = conditionGrid.get(nClass);
+		if (list == null) {
+			return Collections.EMPTY_LIST;
+		}
+		return list;
+
+	}
+
 	public List<SANode> getNodeList(NodeClass nclass) {
 		return classGrid.get(nclass);
 	}
