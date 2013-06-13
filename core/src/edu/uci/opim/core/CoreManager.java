@@ -1,6 +1,5 @@
 package edu.uci.opim.core;
 
-import edu.uci.opim.core.boot.BootManager;
 
 /**
  * Central controller.
@@ -12,7 +11,6 @@ public class CoreManager {
 
 	private static CoreManager instance;
 
-	private BootManager bootManager;
 	private LocationManager locManager;
 	private ClassManager classManager;
 	private NodeManager nodeManager;
@@ -24,7 +22,6 @@ public class CoreManager {
 		locManager = new LocationManager();
 		classManager = new ClassManager();
 		nodeManager = new NodeManager();
-		bootManager = new BootManager();
 		gatewayManager = new GatewayManager();
 		eventLogger = new LogManager();
 		// Registerinf statechange listener

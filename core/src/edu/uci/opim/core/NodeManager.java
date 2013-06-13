@@ -231,7 +231,7 @@ public class NodeManager extends Observable {
 	List<Rule> getRuleList(Sensor sensor) {
 		List<Rule> list = ruleGrid.get(sensor);
 		if (list == null) {
-			return Collections.EMPTY_LIST;
+			return Collections.emptyList();
 		}
 		return list;
 	}
@@ -239,7 +239,7 @@ public class NodeManager extends Observable {
 	List<Condition> getWhiteRuleList(Sensor sensor) {
 		List<Condition> list = conditionGrid.get(sensor);
 		if (list == null) {
-			return Collections.EMPTY_LIST;
+			return Collections.emptyList();
 		}
 		return list;
 	}

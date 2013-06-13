@@ -135,7 +135,7 @@ public class LocationManager {
 	List<Rule> getRuleList(NodeLocation loc) {
 		List<Rule> list = ruleGrid.get(loc);
 		if (list == null) {
-			return Collections.EMPTY_LIST;
+			return Collections.emptyList();
 		}
 		return list;
 	}
@@ -143,7 +143,7 @@ public class LocationManager {
 	List<Condition> getWhiteRuleList(NodeLocation loc) {
 		List<Condition> list = conditionGrid.get(loc);
 		if (list == null) {
-			return Collections.EMPTY_LIST;
+			return Collections.emptyList();
 		}
 		return list;
 	}

@@ -119,7 +119,7 @@ public class ClassManager {
 	List<Rule> getRuleList(NodeClass nClass) {
 		List<Rule> list = ruleGrid.get(nClass);
 		if (list == null) {
-			return Collections.EMPTY_LIST;
+			return Collections.emptyList();
 		}
 		return list;
 
@@ -128,7 +128,7 @@ public class ClassManager {
 	List<Condition> getWhiteRuleList(NodeClass nClass) {
 		List<Condition> list = conditionGrid.get(nClass);
 		if (list == null) {
-			return Collections.EMPTY_LIST;
+			return Collections.emptyList();
 		}
 		return list;
 
