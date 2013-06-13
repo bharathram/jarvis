@@ -1,6 +1,9 @@
 package edu.uci.opim.core.web;
 
 import java.net.InetAddress;
+import java.util.Timer;
+
+import edu.uci.opim.core.boot.CoreConfig;
 
 /**
  * Class models the gateway node at the controller site.
@@ -8,15 +11,17 @@ import java.net.InetAddress;
  * @author bram
  * 
  */
-public class GatewayNode {
+public class GatewayNode implements CoreConfig {
 	public final String ip;
 	public final String gateKey;
 	private long checkin;
+	Timer timer;
 
 	public GatewayNode(String address) {
 		ip = address;
 		this.gateKey = ip.toString();
 		checkin = System.currentTimeMillis();
+		timer = new Timer();
 	}
 
 	public String getGateKey() {
@@ -28,6 +33,14 @@ public class GatewayNode {
 	 */
 	public long getCheckin() {
 		return checkin;
+	}
+
+	public boolean isAlive() {
+		if (checkin < System.currentTimeMillis() - 3 * HEART_BEAT)
+			return false;
+		else
+			return true;
+
 	}
 
 	/**
