@@ -6,11 +6,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.apache.axis2.AxisFault;
 
 import edu.uci.opim.client.stub.DynamicGatewayClient;
 import edu.uci.opim.core.action.Step;
+import edu.uci.opim.core.boot.CoreConfig;
 import edu.uci.opim.core.exception.ExceptionToLog;
 import edu.uci.opim.core.exception.Priority;
 import edu.uci.opim.core.exception.UnableToExecuteStepException;
@@ -25,9 +28,10 @@ public class GatewayManager {
 	 * List of Registered gateways
 	 */
 	private Map<String, GatewayNode> gatewayList = new HashMap<String, GatewayNode>();
+	public List<GatewayNode> deadList = new ArrayList<GatewayNode>();
 
 	/**
-	 * Register an new gateway
+	 * Register an new gatewayGatewayNode
 	 * 
 	 * @param address
 	 * @return
@@ -46,6 +50,12 @@ public class GatewayManager {
 			}
 		}
 		return key;
+	}
+
+	public GatewayManager() {
+		Timer timer = new Timer();
+		timer.schedule(new heartbeat(), 3 * CoreConfig.HEART_BEAT,
+				3 * CoreConfig.HEART_BEAT);
 	}
 
 	public void checkIn(String gateway) {
@@ -166,5 +176,22 @@ public class GatewayManager {
 			e.printStackTrace();
 		}
 
+	}
+
+	public class heartbeat extends TimerTask {
+
+		@Override
+		public void run() {
+			// TODO Auto-generated method stub
+			List<GatewayNode> deadList = new ArrayList<GatewayNode>();
+			for (Map.Entry<String, GatewayNode> entry : gatewayList.entrySet()) {
+				if (!entry.getValue().isAlive()) {
+					gatewayList.remove(entry.getKey());
+					deadList.add(entry.getValue());
+
+				}
+			}
+			CoreManager.getNodeManager().deRegisterNode(deadList);
+		}
 	}
 }
