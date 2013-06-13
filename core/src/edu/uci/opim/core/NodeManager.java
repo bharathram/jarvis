@@ -238,6 +238,14 @@ public class NodeManager extends Observable {
 		return list;
 	}
 
+	List<Condition> getWhiteRuleList(Sensor sensor) {
+		List<Condition> list = conditionGrid.get(sensor);
+		if (list == null) {
+			return Collections.EMPTY_LIST;
+		}
+		return list;
+	}
+
 	public void constructEmail(Rule r) {
 		StringBuilder msg = new StringBuilder();
 		msg.append("Time: " + System.currentTimeMillis() + "\n Rule:"
