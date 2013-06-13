@@ -1,5 +1,10 @@
 package edu.uci.opim.core;
 
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.util.Properties;
+
+import edu.uci.opim.core.boot.CoreConfig;
 
 /**
  * Central controller.
@@ -16,16 +21,27 @@ public class CoreManager {
 	private NodeManager nodeManager;
 	private GatewayManager gatewayManager;
 	private LogManager eventLogger;
+	public CoreConfig config;
 
 	private CoreManager() {
 		// Initialize all the managers
-		locManager = new LocationManager();
-		classManager = new ClassManager();
-		nodeManager = new NodeManager();
-		gatewayManager = new GatewayManager();
-		eventLogger = new LogManager();
-		// Registerinf statechange listener
-		nodeManager.addObserver(new SensorStateChangeHandler());
+		Properties prop = new Properties();
+		try {
+			InputStream in = new FileInputStream("./conf/core.properties");
+			prop.load(in);
+			config = new CoreConfig(prop);
+
+			locManager = new LocationManager();
+			classManager = new ClassManager();
+			nodeManager = new NodeManager();
+			gatewayManager = new GatewayManager();
+			eventLogger = new LogManager();
+			// Registerinf statechange listener
+			nodeManager.addObserver(new SensorStateChangeHandler());
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.exit(-1);
+		}
 
 	}
 

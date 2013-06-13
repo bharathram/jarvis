@@ -14,7 +14,6 @@ import org.apache.commons.codec.binary.Base64;
 
 import edu.uci.opim.client.stub.DynamicGatewayClient;
 import edu.uci.opim.core.action.Step;
-import edu.uci.opim.core.boot.CoreConfig;
 import edu.uci.opim.core.exception.ExceptionToLog;
 import edu.uci.opim.core.exception.Priority;
 import edu.uci.opim.core.exception.UnableToExecuteStepException;
@@ -39,7 +38,8 @@ public class GatewayManager {
 	public String registerGateway(String pass, String address) {
 		try {
 			MessageDigest md = MessageDigest.getInstance("MD5");
-			byte[] secret = md.digest(CoreConfig.KEY.getBytes());
+			byte[] secret = md.digest(CoreManager.getInstance().config.key
+					.getBytes());
 			String hashKey = new String(Base64.encodeBase64(secret));
 			if (hashKey.equals(pass)) {
 				String key = new String(md.digest(address.getBytes()));
