@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Observable;
 
 import javax.mail.MessagingException;
@@ -162,15 +163,18 @@ public class NodeManager extends Observable {
 	}
 
 	public void deRegisterNode(List<GatewayNode> deadList) {
-		Iterator it = aliveNodes.entrySet().iterator();
+		if (deadList == null || deadList.size() == 0) {
+			return;
+		}
+		Iterator<Entry<SANode, GatewayNode>> it = aliveNodes.entrySet()
+				.iterator();
 		while (it.hasNext()) {
-			Map.Entry pairs = (Map.Entry) it.next();
+			Entry<SANode, GatewayNode> pairs = it.next();
 			if (deadList.contains(pairs.getValue())) {
+				System.out.println("Sensor de-registered " + pairs.getKey());
 				it.remove();
-
 			}
 		}
-		System.out.println("Gateway de-registered");
 	}
 
 	public void handleStimulus(String gatewayId, final String sensorName,

@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -214,7 +215,8 @@ public class GatewayManager {
 		public void run() {
 			// TODO Auto-generated method stub
 			List<GatewayNode> deadList = new ArrayList<GatewayNode>();
-			Iterator it = gatewayList.entrySet().iterator();
+			Iterator<Entry<String, GatewayNode>> it = gatewayList.entrySet()
+					.iterator();
 			while (it.hasNext()) {
 				Map.Entry<String, GatewayNode> pairs = (Map.Entry<String, GatewayNode>) it
 						.next();

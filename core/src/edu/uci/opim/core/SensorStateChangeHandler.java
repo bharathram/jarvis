@@ -26,12 +26,10 @@ public class SensorStateChangeHandler implements Observer {
 					.getWhiteRuleList(evt.sensor);
 			whiteruleSet.addAll(whiteruleList);
 
-			NodeClass[] whiteclasses = evt.sensor.getClasses();
-			for (NodeClass nodeClass : whiteclasses) {
-				whiteruleList = CoreManager.getClassManager().getWhiteRuleList(
-						nodeClass);
-				whiteruleSet.addAll(whiteruleList);
-			}
+			NodeClass whiteclasses = evt.sensor.getClasses();
+			whiteruleList = CoreManager.getClassManager().getWhiteRuleList(
+					whiteclasses);
+			whiteruleSet.addAll(whiteruleList);
 
 			whiteruleList = CoreManager.getLocManager().getWhiteRuleList(
 					evt.sensor.getLocation());
@@ -50,11 +48,9 @@ public class SensorStateChangeHandler implements Observer {
 			ruleSet.addAll(ruleList);
 
 			// List of rules to process for a class
-			NodeClass[] classes = evt.sensor.getClasses();
-			for (NodeClass nodeClass : classes) {
-				ruleList = CoreManager.getClassManager().getRuleList(nodeClass);
-				ruleSet.addAll(ruleList);
-			}
+			NodeClass classes = evt.sensor.getClasses();
+			ruleList = CoreManager.getClassManager().getRuleList(classes);
+			ruleSet.addAll(ruleList);
 
 			// List of rules to process for the sensor location
 			ruleList = CoreManager.getLocManager().getRuleList(

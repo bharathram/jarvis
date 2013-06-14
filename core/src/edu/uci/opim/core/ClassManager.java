@@ -77,10 +77,9 @@ public class ClassManager {
 	}
 
 	public void registerNode(SANode node) {
-		NodeClass[] classes = node.getClasses();
-		for (NodeClass nodeClass : classes) {
-			registerNode(nodeClass.string, node);
-		}
+		NodeClass classes = node.getClasses();
+		registerNode(classes.string, node);
+
 	}
 
 	public void addRule(NodeClass nClass, Rule rule) {

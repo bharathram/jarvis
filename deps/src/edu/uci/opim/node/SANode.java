@@ -14,7 +14,7 @@ import java.util.Map;
 public abstract class SANode {
 	private String id;
 	private String name;
-	private List<NodeClass> classes = new ArrayList<NodeClass>();
+	private NodeClass classes;
 	private NodeLocation location;
 	private String confPath;
 	private List<NodeState> states = new ArrayList<NodeState>();
@@ -49,15 +49,13 @@ public abstract class SANode {
 		return name;
 	}
 
-	public NodeClass[] getClasses() {
-		NodeClass[] ret = new NodeClass[classes.size()];
-		classes.toArray(ret);
-		return ret;
+	public NodeClass getClasses() {
+
+		return classes;
 	}
 
-	public void addClass(NodeClass newClass) {
-		classes.add(newClass);
-
+	public void setClasses(NodeClass classes) {
+		this.classes = classes;
 	}
 
 	public NodeState[] getStates() {
@@ -90,7 +88,7 @@ public abstract class SANode {
 
 	@Override
 	public String toString() {
-		return "" + getClass() + "name:" + name + "location" + location + "]";
+		return "" + classes + "name:" + name + "location" + location + "]";
 	}
 
 	@Override
