@@ -10,6 +10,7 @@ public class Config {
 	public final String email_sys;
 	public final String email_admin;
 	public final String pwd_sys;
+	public static final int PULSE_MIN = 1;
 
 	/**
 	 * @param args
