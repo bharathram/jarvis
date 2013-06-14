@@ -32,6 +32,7 @@ public abstract class Predicate {
 			break;
 		case OR:
 			result = start || predicate.evaluate(evt);
+			break;
 		default:
 			result = predicate.evaluate(evt);
 			break;
