@@ -13,5 +13,6 @@ public class TemperatureSensor extends SensorSimMod {
 	public TemperatureSensor() {
 		super("Temperature Sensor", new String[] { "Temperature warm",
 				"Temperature hot", "Temperature cold" });
+		TemperatureModel.getInstance().addSensor(this);
 	}
 }
