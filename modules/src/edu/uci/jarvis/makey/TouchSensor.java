@@ -38,6 +38,8 @@ public class TouchSensor extends AbstractSensorModule {
 		 * 
 		 */
 		private static final long serialVersionUID = 1L;
+		private long lastPressProcessed = 0;
+		private long lastReleaseProcessed = 0;
 
 		@Override
 		public void init() {
@@ -54,12 +56,20 @@ public class TouchSensor extends AbstractSensorModule {
 
 		@Override
 		public void keyPressed(KeyEvent arg0) {
-			TouchSensor.this.notify(new NodeState("Pressed"));
+			if (System.currentTimeMillis() - lastPressProcessed > 5000) {
+				// Do your work here...
+				lastPressProcessed = System.currentTimeMillis();
+				TouchSensor.this.notify(new NodeState("Pressed"));
+			}
 		}
 
 		@Override
 		public void keyReleased(KeyEvent arg0) {
-			TouchSensor.this.notify(new NodeState("Released"));
+			if (System.currentTimeMillis() - lastReleaseProcessed > 5000) {
+				// Do your work here...
+				lastReleaseProcessed = System.currentTimeMillis();
+				TouchSensor.this.notify(new NodeState("Released"));
+			}
 		}
 
 		@Override
