@@ -103,7 +103,7 @@ public class SensorParser {
 				String class2 = eElement.getElementsByTagName("class")
 						.item(temp).getTextContent();
 				NodeClass class1 = new NodeClass(class2);
-				node.addClass(class1);
+				node.setClasses(class1);
 				System.out.println("Class Name : "
 						+ eElement.getElementsByTagName("class").item(temp)
 								.getTextContent());
