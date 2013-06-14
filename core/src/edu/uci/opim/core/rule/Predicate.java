@@ -23,8 +23,11 @@ public abstract class Predicate {
 		this.chainedCondition = chainedCondition;
 	}
 
-	public static boolean evaluate(boolean start, Predicate predicate,
+	public static boolean evaluate(Boolean start, Predicate predicate,
 			StateChangedEvent evt) {
+		if (start == null) {
+			return predicate.evaluate(evt);
+		}
 		boolean result;
 		switch (predicate.chainedCondition) {
 		case AND:
@@ -32,6 +35,7 @@ public abstract class Predicate {
 			break;
 		case OR:
 			result = start || predicate.evaluate(evt);
+			break;
 		default:
 			result = predicate.evaluate(evt);
 			break;
