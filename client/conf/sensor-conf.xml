@@ -23,6 +23,12 @@
 		<state id="Earthquake Low">Mild tremor</state>
 		<ws-path>./plugins/seismic.jar</ws-path>
 	</sensor>
+	<actuator id="ETHC1">
+		<name>Earthquake Conf</name>
+		<class>seismic conf</class>
+		<location>lab</location>		
+		<ws-path>./plugins/seismic.jar</ws-path>
+	</actuator>
 	<sensor id="PHO1">
 		<name>Light Sensor</name>
 		<class>photonic</class>
@@ -31,6 +37,12 @@
 		<state id="Light off">Lights are off</state>
 		<ws-path>./plugins/light.jar</ws-path>
 	</sensor>
+	<actuator id="PHC1">
+		<name>Light Sensor conf</name>
+		<class>photonic conf</class>
+		<location>lab</location>		
+		<ws-path>./plugins/light.jar</ws-path>
+	</actuator>
 	<sensor id="TMP1">
 		<name>Temperature Sensor</name>
 		<class>thermal</class>
@@ -40,5 +52,26 @@
 		<state id="Temperature cold">Its cold</state>
 		<ws-path>./plugins/temp.jar</ws-path>
 	</sensor>
-		
+	<actuator id="TMPC1">
+		<name>Temperature Sensor</name>
+		<class>thermal conf</class>
+		<location>lab</location>		
+		<ws-path>./plugins/temp.jar</ws-path>
+	</actuator>
+	<sensor id="MK1">
+		<name>Makey Makey</name>
+		<class>tactile</class>
+		<location>lab</location>
+		<state id="Pressed">Intrusion detected</state>
+		<state id="Released">Normal</state>
+		<ws-path>./plugins/makey.jar</ws-path>
+	</sensor>
+	<sensor id="RF1">
+		<name>RFID</name>
+		<class>RF</class>
+		<location>lab</location>
+		<state id="Student In">Student In</state>
+		<state id="Student Out">Student Out</state>
+		<ws-path>./plugins/rfid.jar</ws-path>
+	</sensor>		
 </configuration> 

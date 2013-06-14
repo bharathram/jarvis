@@ -1,4 +1,4 @@
-package edu.uci.jarvis.test;
+package edu.uci.jarvis.makey;
 
 import java.applet.Applet;
 import java.awt.Color;
@@ -13,24 +13,28 @@ import edu.uci.jarvis.mod.AbstractSensorModule;
 import edu.uci.opim.node.NodeState;
 
 @PluginImplementation
-public class Task extends AbstractSensorModule {
+public class TouchSensor extends AbstractSensorModule {
 
 	JFrame frame = new JFrame();
 	Applet ap;
 
-	public Task() {
+	public TouchSensor() {
 		final JFrame frame = new JFrame();
-		ap = new task();
+		ap = new UiApplet();
 		ap.init();
 		frame.getContentPane().add(ap);
 
 		frame.setSize(ap.getSize());
-		// TODO Auto-generated method stub
 
 		frame.setVisible(true);
 	}
 
-	class task extends Applet implements KeyListener {
+	class UiApplet extends Applet implements KeyListener {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
 		@Override
 		public void init() {
 			setBounds(0, 0, 350, 250);
@@ -46,30 +50,17 @@ public class Task extends AbstractSensorModule {
 
 		@Override
 		public void keyPressed(KeyEvent arg0) {
-			// TODO Auto-generated method stub
-			Task.this.notify(new NodeState("KeyPressed"));
+			TouchSensor.this.notify(new NodeState("Pressed"));
 		}
 
 		@Override
 		public void keyReleased(KeyEvent arg0) {
-			// TODO Auto-generated method stub
-			Task.this.notify(new NodeState("KeyReleased"));
+			TouchSensor.this.notify(new NodeState("Released"));
 		}
 
 		@Override
 		public void keyTyped(KeyEvent arg0) {
-			// TODO Auto-generated method stub
-			// Task.this.notify(new NodeState("KeyPressed"));
-
+			// Do nothing
 		}
-	}
-
-	/**
-	 * @param args
-	 * @throws
-	 */
-
-	public static void main(String[] args) throws InterruptedException {
-		Task t = new Task();
 	}
 }

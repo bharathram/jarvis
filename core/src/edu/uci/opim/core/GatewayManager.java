@@ -17,10 +17,10 @@ import org.apache.commons.codec.binary.Base64;
 
 import edu.uci.opim.client.stub.DynamicGatewayClient;
 import edu.uci.opim.core.action.Step;
-import edu.uci.opim.core.boot.CoreConfig;
 import edu.uci.opim.core.exception.ExceptionToLog;
 import edu.uci.opim.core.exception.Priority;
 import edu.uci.opim.core.exception.UnableToExecuteStepException;
+import edu.uci.opim.core.web.Config;
 import edu.uci.opim.core.web.GatewayNode;
 import edu.uci.opim.node.NodeClass;
 import edu.uci.opim.node.NodeLocation;
@@ -76,8 +76,8 @@ public class GatewayManager {
 
 	public GatewayManager() {
 		Timer timer = new Timer();
-		timer.schedule(new heartbeat(), 3 * CoreConfig.HEART_BEAT,
-				3 * CoreConfig.HEART_BEAT);
+		timer.schedule(new heartbeat(), 3 * Config.PULSE_MIN * 60 * 1000,
+				3 * Config.PULSE_MIN * 60 * 1000);
 	}
 
 	public void checkIn(String gateway) {
