@@ -26,12 +26,12 @@ public class Condition {
 	}
 
 	public boolean evaluate(StateChangedEvent event) {
-		boolean cond = false;
+		Boolean cond = false;
 		Iterator<Predicate> iterator = predicates.iterator();
 		// TODO:Handle braces
 		while (iterator.hasNext()) {
 			Predicate predicate = (Predicate) iterator.next();
-			cond = Predicate.evaluate(cond, predicate, event);
+			cond = new Boolean(Predicate.evaluate(cond, predicate, event));
 		}
 		return cond;
 	}
