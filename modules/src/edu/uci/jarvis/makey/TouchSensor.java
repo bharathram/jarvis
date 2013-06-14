@@ -19,13 +19,10 @@ public class TouchSensor extends AbstractSensorModule {
 	Applet ap;
 
 	public TouchSensor() {
-<<<<<<< HEAD:modules/src/edu/uci/jarvis/makey/TouchSensor.java
-=======
 	}
 
 	@Override
 	public void init() {
->>>>>>> dc6a4d779678bee845114846ca0797a3602a4247:modules/src/edu/uci/jarvis/makey/TouchSensor.java
 		final JFrame frame = new JFrame();
 		ap = new UiApplet();
 		ap.init();
