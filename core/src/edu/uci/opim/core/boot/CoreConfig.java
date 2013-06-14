@@ -6,7 +6,7 @@ import edu.uci.opim.core.web.Config;
 
 public class CoreConfig extends Config {
 	public static String RULE_CONF_PATH = "./conf/rule-conf.xml";
-	public static long HEART_BEAT = 900000;
+	public static long HEART_BEAT = 50000;
 	public final String DB_URL;
 	public final String DB_USERNAME;
 	public final String DB_PWD;

@@ -167,9 +167,10 @@ public class NodeManager extends Observable {
 			Map.Entry pairs = (Map.Entry) it.next();
 			if (deadList.contains(pairs.getValue())) {
 				it.remove();
+
 			}
 		}
-
+		System.out.println("Gateway de-registered");
 	}
 
 	public void handleStimulus(String gatewayId, final String sensorName,
