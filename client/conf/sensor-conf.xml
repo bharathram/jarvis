@@ -50,13 +50,13 @@
 		<state id="Temperature warm">Its warm</state>
 		<state id="Temperature hot">Its hot</state>
 		<state id="Temperature cold">Its cold</state>
-		<ws-path>./plugins/temp.jar</ws-path>
+		<ws-path>./plugins/temperature.jar</ws-path>
 	</sensor>
 	<actuator id="TMPC1">
-		<name>Temperature Sensor</name>
+		<name>Temperature Sensor Conf</name>
 		<class>thermal conf</class>
 		<location>lab</location>		
-		<ws-path>./plugins/temp.jar</ws-path>
+		<ws-path>./plugins/temperature.jar</ws-path>
 	</actuator>
 	<sensor id="MK1">
 		<name>Makey Makey</name>
