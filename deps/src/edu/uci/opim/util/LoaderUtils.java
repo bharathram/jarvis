@@ -21,7 +21,10 @@ public class LoaderUtils {
 	public static ActuatorModule getActuatorModule(String jarPath) {
 		PluginManager pm = PluginManagerFactory.createPluginManager();
 		pm.addPluginsFrom(new File(jarPath).toURI());
-		return pm.getPlugin(ActuatorModule.class);
+		ActuatorModule plugin = pm.getPlugin(ActuatorModule.class);
+		System.out.println("Plugin class " + plugin);
+
+		return plugin;
 	}
 
 	public static SensorModule getSensorModule(String jarPath) {
@@ -33,6 +36,7 @@ public class LoaderUtils {
 		if (plugin == null) {
 			throw new RuntimeException("No plugin found at " + jarPath);
 		}
+		plugin.init();
 		return plugin;
 	}
 }

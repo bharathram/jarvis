@@ -13,14 +13,17 @@ import javax.swing.JFrame;
 import edu.uci.jarvis.mod.AbstractSensorModule;
 import edu.uci.opim.node.NodeState;
 
-public class SensorSimMod extends AbstractSensorModule {
-	final Applets ap;
+abstract public class SensorSimMod extends AbstractSensorModule {
+	Applets ap;
 
 	String SensorName = "";
 	String[] SensorStates;
 	String prevState;
 
-	public SensorSimMod(String name, String[] states) {
+	public SensorSimMod() {
+	}
+
+	public void init(String name, String[] states) {
 		// TODO Auto-generated constructor stub
 
 		this.SensorName = name;
@@ -32,7 +35,7 @@ public class SensorSimMod extends AbstractSensorModule {
 
 		// @Override
 		// public void run() {
-		final JFrame frame = AppletManager.getFrame();
+		final JFrame frame = new JFrame();
 		frame.getContentPane().add(ap);
 		ap.init();
 		frame.setSize(ap.getSize());

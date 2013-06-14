@@ -6,13 +6,10 @@ import edu.uci.jarvis.applet.SensorSimMod;
 @PluginImplementation
 public class EarthquakeSensor extends SensorSimMod {
 
-	/**
-	 * @param args
-	 */
-
-	public EarthquakeSensor() {
-		super("Earthquake Sensor", new String[] { "Earthquake high",
-				"Earthquake Low" });
+	@Override
+	public void init() {
+		super.init("Earthquake Sensor", new String[] { "Normal",
+				"Earthquake high", "Earthquake Low" });
 		EarthQuakeModel.getInstance().addSensor(this, true);
 	}
 }

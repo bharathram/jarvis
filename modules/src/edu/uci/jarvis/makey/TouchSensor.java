@@ -19,6 +19,10 @@ public class TouchSensor extends AbstractSensorModule {
 	Applet ap;
 
 	public TouchSensor() {
+	}
+
+	@Override
+	public void init() {
 		final JFrame frame = new JFrame();
 		ap = new UiApplet();
 		ap.init();
