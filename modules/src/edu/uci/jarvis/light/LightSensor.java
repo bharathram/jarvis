@@ -10,8 +10,10 @@ public class LightSensor extends SensorSimMod {
 	 * @param args
 	 */
 
-	public LightSensor() {
-		super("Light Sensor", new String[] { "Light on", "Light off" });
+	@Override
+	public void init() {
+		super.init("Light Sensor", new String[] { "Light on", "Light off" });
 		LightModel.getInstance().addSensor(this, true);
+
 	}
 }

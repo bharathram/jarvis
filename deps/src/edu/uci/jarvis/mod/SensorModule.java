@@ -11,4 +11,5 @@ import net.xeoh.plugins.base.Plugin;
  * 
  */
 public interface SensorModule extends Plugin {
+	public void init();
 }

@@ -10,9 +10,10 @@ public class TemperatureSensor extends SensorSimMod {
 	 * @param args
 	 */
 
-	public TemperatureSensor() {
-		super("Temperature Sensor", new String[] { "Temperature warm",
+	public void init() {
+		super.init("Temperature Sensor", new String[] { "Temperature warm",
 				"Temperature hot", "Temperature cold" });
 		TemperatureModel.getInstance().addSensor(this, true);
+
 	}
 }

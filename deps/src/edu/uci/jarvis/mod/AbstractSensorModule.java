@@ -4,7 +4,8 @@ import java.util.Observable;
 
 import edu.uci.opim.node.NodeState;
 
-public class AbstractSensorModule extends Observable implements SensorModule {
+abstract public class AbstractSensorModule extends Observable implements
+		SensorModule {
 
 	/**
 	 * Adds an observer to the set of observers for this object, provided that
@@ -37,11 +38,11 @@ public class AbstractSensorModule extends Observable implements SensorModule {
 		System.out.println("SensorSimMod.notify()" + n);
 		setChanged();
 		new Thread(new Runnable() {
-			
+
 			@Override
 			public void run() {
 				notifyObservers(n);
-				
+
 			}
 		}).start();
 	}
