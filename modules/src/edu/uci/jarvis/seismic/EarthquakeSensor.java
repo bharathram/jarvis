@@ -13,6 +13,6 @@ public class EarthquakeSensor extends SensorSimMod {
 	public EarthquakeSensor() {
 		super("Earthquake Sensor", new String[] { "Earthquake high",
 				"Earthquake Low" });
-		EarthQuakeModel.getInstance().addSensor(this);
+		EarthQuakeModel.getInstance().addSensor(this, true);
 	}
 }

@@ -28,9 +28,11 @@ public class AbstractNodeModel {
 		return frequency;
 	}
 
-	public synchronized void addSensor(SensorSimMod mod) {
+	public synchronized void addSensor(SensorSimMod mod, boolean tostart) {
 		this.sensorMod = mod;
-		setFrequency(DEFAULT);
+		if (tostart) {
+			setFrequency(DEFAULT);
+		}
 
 	}
 

@@ -12,6 +12,6 @@ public class LightSensor extends SensorSimMod {
 
 	public LightSensor() {
 		super("Light Sensor", new String[] { "Light on", "Light off" });
-		LightModel.getInstance().addSensor(this);
+		LightModel.getInstance().addSensor(this, true);
 	}
 }
