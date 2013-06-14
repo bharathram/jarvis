@@ -3,8 +3,6 @@ package edu.uci.opim.core.web;
 import java.net.InetAddress;
 import java.util.Timer;
 
-import edu.uci.opim.core.boot.CoreConfig;
-
 /*
  * Class models the gateway node at the controller site.
  * 
@@ -36,7 +34,8 @@ public class GatewayNode {
 	}
 
 	public boolean isAlive() {
-		if (checkin < System.currentTimeMillis() - 3 * CoreConfig.HEART_BEAT) {
+		if (checkin < System.currentTimeMillis() - 3 * Config.PULSE_MIN * 60
+				* 1000) {
 			return false;
 		} else {
 			return true;
