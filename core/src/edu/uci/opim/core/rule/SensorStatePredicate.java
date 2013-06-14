@@ -14,7 +14,7 @@ import edu.uci.opim.node.Sensor;
  */
 public class SensorStatePredicate extends Predicate {
 	NodeLocation location;
-	NodeClass sensorClass;
+	NodeClass sensorClass = NodeClass.EMPTY;
 	String host;
 	String nodeState;
 	String oper;

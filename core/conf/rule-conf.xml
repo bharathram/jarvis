@@ -4,22 +4,41 @@
 	<rule priority="1">
 		<name>The earth quake rule</name>
 		<condition>
-		<state host="Earthquake" oper="EQ">Earthquake high</state>
+			<state host="Earthquake" oper="EQ">Earthquake high</state>
+			<or/>
+			<state host="Earthquake" oper="EQ">Earthquake Low</state>			
 		</condition>
 		<action>		
-			<do host="Web cam" >TakePic</do>	
+			<do class="buzzer" >BeepEmergency</do>
+			<do host="Temperature Sensor Conf">Monitor_1</do>	
 		</action>
-	</rule>	
-	<rule priority="1">
-		<name>The earth quake rule</name>
+	</rule>
+
+	<rule priority="5">
+		<name>Intruder</name>
 		<condition>
-		<state host="Earthquake" oper="EQ">Earthquake Low</state>
+			<state host="RFID" oper="EQ">Student In</state>
+			<and/>
+			<time gt="20:00" lte="06:00"/>
 		</condition>
-		<action>		
-			<do host="Buzzer" >BeepEmergency</do>	
-		</action>
-	</rule>	
+		<action>
+			<do host="Web cam">TakePic</do>
+		</action>		
+	</rule>
+
+	<rule priority="1">
+		<name>Stranger</name>
+		<condition>
+			<time gt="20:00" lte="06:00"/>
+			<and/>
+			<state location="lab" class="photonic" oper="EQ">LightOn</state>
+		</condition>
+		<action>
+			<do class="camera" location="lab">TakePic</do>
+			<do class="buzzer">IntruderAlert</do>
+		</action>		
+	</rule>
 </blacklist>
-<whitelist>something
+<whitelist>
 </whitelist>
 </ruleset>

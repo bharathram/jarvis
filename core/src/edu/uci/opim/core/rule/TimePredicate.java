@@ -1,7 +1,7 @@
 package edu.uci.opim.core.rule;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import edu.uci.opim.core.StateChangedEvent;
 
@@ -34,10 +34,11 @@ public class TimePredicate extends Predicate {
 
 	@Override
 	public boolean evaluate(StateChangedEvent evt) {
-		String[] split1 = SimpleDateFormat.getTimeInstance(DateFormat.SHORT)
-				.toString().split(":");
-		int currTime = Integer.parseInt(split1[0]) * 60
-				+ Integer.parseInt(split1[1]);
+		Date d = new Date();
+
+		String hr = new SimpleDateFormat("HH").format(d);
+		String min = new SimpleDateFormat("mm").format(d);
+		int currTime = Integer.parseInt(hr) * 60 + Integer.parseInt(min);
 
 		if (end < 12 * 60 || start > 12 * 60) {
 			if (currTime < end || currTime > start) {
@@ -51,5 +52,4 @@ public class TimePredicate extends Predicate {
 				return false;
 		}
 	}
-
 }
